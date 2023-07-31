@@ -1,7 +1,5 @@
 import os
 import pandas as pd
-import csv
-import pdfplumber
 from docx import Document
 import numpy as np
 import re
@@ -9,6 +7,50 @@ import re
 cur_path = os.path.dirname(__file__)
 true_path = "/Users/corwincheung/Programming/Systems Dynamics Analysis/data"
 
+
+def year_2013():
+    dfs_2013 = []
+    document_2013 = Document("data/2013 Report survey.docx")
+    # print out all columns for categorization
+
+    for paragraph in document_2013.paragraphs:
+        if any(run.bold for run in paragraph.runs):
+            if not any(substring in paragraph.text for substring in ["Text Entry","View More","%", "Answer"]):
+                print(paragraph.text)
+
+def year_2014():
+    dfs_2014 = []
+    document_2014 = Document("data/2014 System dynamics conference.docx")
+    # print out all columns for categorization
+
+    for paragraph in document_2014.paragraphs:
+        if any(run.bold for run in paragraph.runs):
+            if not any(substring in paragraph.text for substring in ["Text Entry","View More","%", "Answer"]):
+                print(paragraph.text)
+
+def year_2015():
+    dfs_2015 = []
+    document_2015 = Document("data/2015 Report survey.docx")
+    # print out all columns for categorization
+
+    for paragraph in document_2015.paragraphs:
+        line = paragraph.text
+        if re.match(r'^\d+\.\s', line):
+            # split at first occurrence of ' - ' and take the part after it
+            line = line.split('.', 1)[1]
+            print(line)
+
+def year_2016():
+    dfs_2016 = []
+    document_2016 = Document("data/2016 Report survey.docx")
+    # print out all columns for categorization
+
+    for paragraph in document_2016.paragraphs:
+        line = paragraph.text
+        if line.startswith('Q') and not line.startswith('Qu'):
+            # split at first occurrence of ' - ' and take the part after it
+            line = line.split(' - ', 1)[1]
+            print(line)
 
 def year_2018():
     dfs_2018 = []
@@ -327,7 +369,10 @@ def main():
     # year_2021()
     # year_2020()
     # year_2019()
-    year_2018()
+    # year_2018()
+    # year_2016()
+    # year_2015()
+    year_2014()
 
     # Make big csv from pandas dataframe with year, categorical variables, Q1, Q2, Q19-23, Q26-31, 13 columns
     # Make big csv from pandas dataframe with year, boolean variables, Q24-25, Q32-33, 4 columns
