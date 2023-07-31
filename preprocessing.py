@@ -4,51 +4,96 @@ import csv
 import pdfplumber
 from docx import Document
 import numpy as np
-
+import re
 
 cur_path = os.path.dirname(__file__)
 true_path = "/Users/corwincheung/Programming/Systems Dynamics Analysis/data"
 
 
-def pdf_to_csv(file):
-    # use pdfplumber or PyPDF2 to read pdf files
-    with pdfplumber.open(file) as pdf:
-        first_page = pdf.pages[0]
-        raw_text = first_page.extract_text()
+def year_2018():
+    dfs_2018 = []
+    document_2018 = Document("data/2018 ISDC survey report.docx")
+    # print out all columns for categorization
 
-    # process the raw_text as needed, then save it into a csv file
-    # here I'm just writing the raw text to a csv file
-    with open(f"{file}.csv", "w") as f:
-        writer = csv.writer(f)
-        writer.writerow([raw_text])
-
-
-def xlsx_to_csv(file):
-    # use pandas to read xlsx files
-    data_xls = pd.read_excel(file, index_col=None)
-    data_xls.to_csv(f"{file}.csv", encoding='utf-8')
+    for paragraph in document_2018.paragraphs:
+        line = paragraph.text
+        if line.startswith('Q'):
+            # split at first occurrence of ' - ' and take the part after it
+            line = line.split(' - ', 1)[1]
+            print(line)
 
 
-# mapping from extension to conversion function
-CONVERSIONS = {"pdf": pdf_to_csv, "xlsx": xlsx_to_csv}
+def year_2019():
+    dfs_2019 = []
+    document_2019 = Document("data/2019 c ISDC.docx")
+    # print out all columns for categorization
+
+    for paragraph in document_2019.paragraphs:
+        line = paragraph.text
+        if line.startswith('Q'):
+            # split at first occurrence of ' - ' and take the part after it
+            line = line.split(' - ', 1)[1]
+            print(line)
 
 
 def year_2020():
-    pass
+    dfs_2020 = []
+    document_2020 = Document("data/2020 ISDC survey Report.docx")
+    # print out all columns for categorization
+
+    for paragraph in document_2020.paragraphs:
+        line = paragraph.text
+        if line.startswith('Q'):
+            # split at first occurrence of ' - ' and take the part after it
+            line = line.split(' - ', 1)[1]
+            print(line)
 
 
 def year_2021():
     dfs_2021 = []
     document_2021 = Document("data/2021 b ISDC.docx")
+
+    # print out all columns for categorization
+
+    for paragraph in document_2021.paragraphs:
+        line = paragraph.text
+        if line.startswith('Q'):
+            # split at first occurrence of ' - ' and take the part after it
+            line = line.split(' - ', 1)[1]
+            print(line)
+
     for table in document_2021.tables:
         text = [[cell.text for cell in row.cells] for row in table.rows]
         df = pd.DataFrame(text)
         dfs_2021.append(df)
 
     print(len(dfs_2021))
-    print("data_type: " + str(type(dfs_2021)))
-    print("data_type item: " + str(type(dfs_2021[0])))
-    print(dfs_2021[0:7])
+    # print("data_type: " + str(type(dfs_2021)))
+    # print("data_type item: " + str(type(dfs_2021[0])))
+    # print(dfs_2021[0:7])
+
+    # categorical dictionaries
+    subset_indices = [0, 1, 25, 26, 27, 28, 29, 35, 36,
+                      37, 38, 39, 40]  # Assuming zero-based indexing
+    categorical_df_2021 = dfs_2021.iloc[:, subset_indices]
+    print(categorical_df_2021.columns)
+
+    slice_1 = dfs_2021[0][3]
+
+    value_counts_dict_1 = {
+        "Attend workshops": int(slice_1[1]), "Access session recordings": int(slice_1[2]), "View posters or attend poster session": int(slice_1[3])}
+
+    print(value_counts_dict_1)
+
+    # print(dfs_2021[1])
+
+    # print(dfs_2021[2])
+
+    # boolean dictionaries
+
+    # numerical dictionaries
+
+    # text dictionaries
 
 
 def explode_for_multiselect(df, column, specified_options):
@@ -75,6 +120,7 @@ def year_2022():
     df_2022 = pd.read_excel(file_path)
     df_2022 = df_2022.drop("Timestamp", axis=1)
     pd.set_option('display.max_columns', None)
+    print(df_2022.head())
     subset_indices = [0, 1, 25, 26, 27, 28, 29, 35, 36,
                       37, 38, 39, 40]  # Assuming zero-based indexing
     categorical_df_2022 = df_2022.iloc[:, subset_indices]
@@ -196,21 +242,97 @@ def year_2022():
     for column_name, value_counts_dict in value_counts_dicts.items():
         count_categorical_df_2022.loc["2022",
                                       column_name] = [value_counts_dict]
-
-    print(count_categorical_df_2022)
     print(count_categorical_df_2022.shape)
 
     count_categorical_df_2022.to_csv("categorical_questions.csv")
 
+    subset_indices = [33, 34, 42, 43]  # Assuming zero-based indexing
+    boolean_df_2022 = df_2022.iloc[:, subset_indices]
+
+    # print(boolean_df_2022.head())
+
+    column_names = ["Have you contacted any presenters for more information?",
+                    "Did you visit any exhibitors during the conference?",
+                    "Would you recommend this event to others?",
+                    "Do you plan to attend this conference in the future?"]
+
+    count_boolean_df_2022 = pd.DataFrame(index=["2022"])
+
+    for column_name in column_names:
+        bool_counts = boolean_df_2022[column_name].value_counts().to_dict()
+        count_boolean_df_2022.loc["2022", column_name] = [bool_counts]
+
+    print(count_boolean_df_2022.shape)
+    # print(count_boolean_df_2022)
+
+    count_boolean_df_2022.to_csv("boolean_questions.csv")
+
+    numerical_indices = [2, 4, 6, 8, 10, 12, 13, 14,
+                         15, 16, 17, 18, 19, 20, 21, 23]  # Assuming zero-based indexing
+    numerical_df_2022 = df_2022.iloc[:, numerical_indices]
+
+    print(numerical_df_2022.columns)
+    count_numerical_df_2022 = pd.DataFrame(index=["2022"])
+
+    column_names = ["When it comes to the content of the conference program, my evaluation is:",
+                    'When it comes to the conference website and access to presented work, my evaluation is:',
+                    'When it comes to the services provided by the conference organization, including technical support, my evaluation is:',
+                    'When it comes to the opportunity to socialize at the conference, my evaluation is:',
+                    'When it comes to overall conference value, my evaluation is:',
+                    'How do you evaluate the following sessions and workshops? [Plenary sessions]',
+                    'How do you evaluate the following sessions and workshops? [Parallel sessions]',
+                    'How do you evaluate the following sessions and workshops? [Work-in-progress (WIP) sessions]',
+                    'How do you evaluate the following sessions and workshops? [Feedback sessions]',
+                    'How do you evaluate the following sessions and workshops? [Student-Organized Colloquium on Monday]',
+                    'How do you evaluate the following sessions and workshops? [Virtual poster sessions on Wednesday]',
+                    'How do you evaluate the following sessions and workshops? [In-presence poster session on Wednessday]',
+                    'How do you evaluate the following sessions and workshops? [Roundtables on Friday]',
+                    'How do you evaluate the following sessions and workshops? [Online workshops on July 12]',
+                    'How do you evaluate the following sessions and workshops? [Hybrid workshops on July 22]',
+                    'How do you rate the overall quality of the presented work?']
+
+    for column_name in column_names:
+        bool_counts = numerical_df_2022[column_name].value_counts(
+        ).to_dict()
+        count_numerical_df_2022.loc["2022", column_name] = [bool_counts]
+
+    print(count_numerical_df_2022.shape)
+    # print(count_numerical_df_2022)
+
+    count_numerical_df_2022.to_csv("numerical_questions.csv")
+
+    text_indices = [3, 5, 7, 9, 11, 22, 24, 30, 31, 32, 41]
+    text_df_2022 = df_2022.iloc[:, text_indices]
+
+    print(text_df_2022.columns)
+    # print(text_df_2022["Additional comments"])
+
+    text_responses_2022 = pd.DataFrame(
+        index=["2022"], columns=text_df_2022.columns)
+
+    for column_name in text_df_2022.columns:
+        # Drop NaN values and convert column to a list
+        responses = text_df_2022[column_name].dropna().tolist()
+        responses = np.array(responses)
+        text_responses_2022.at["2022", column_name] = responses
+
+    print(text_responses_2022.shape)
+    print(text_responses_2022)
+
+    text_responses_2022.to_csv("text_responses.csv")
+
 
 def main():
-    year_2022()
+    # year_2022()
     # year_2021()
+    # year_2020()
+    # year_2019()
+    year_2018()
 
-    # Make big csv from pandas dataframe with year, categorical variables, Q1, Q2, Q19-23, Q26-31
-    # Make big csv from pandas dataframe with year, boolean variables, Q24-25, Q32-33
-    # Make big csv from pandas dataframe with year, numerical ratings, Q3-18
-    # Make big csv from pandas dataframe with year, additional response strings, Addition Qs 1-5
+    # Make big csv from pandas dataframe with year, categorical variables, Q1, Q2, Q19-23, Q26-31, 13 columns
+    # Make big csv from pandas dataframe with year, boolean variables, Q24-25, Q32-33, 4 columns
+    # Make big csv from pandas dataframe with year, numerical ratings, Q3-18, 16 columns
+    # Make big csv from pandas dataframe with year, additional response strings, Addition Qs 1-5, others 11 columns
 
 
 if __name__ == "__main__":
