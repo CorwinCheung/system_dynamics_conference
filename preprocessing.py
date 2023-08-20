@@ -137,208 +137,208 @@ def year_2021():
 
     print(type(dfs_2021[0]))
 
-    # print("data_type: " + str(type(dfs_2021)))
-    # print("data_type item: " + str(type(dfs_2021[0])))
+    print("data_type: " + str(type(dfs_2021)))
+    print("data_type item: " + str(type(dfs_2021[0])))
     # print(dfs_2021[0:7])
 
     # categorical dictionaries
 
-    # slice_1 = dfs_2021[0][3]
+    slice_1 = dfs_2021[0][3]
 
-    # value_counts_dict_1 = {
-    #     "Attend workshops": int(slice_1[1]), "Access session recordings": int(slice_1[2]), "View posters or attend poster session": int(slice_1[3])}
+    value_counts_dict_1 = {
+        "Attend workshops": int(slice_1[1]), "Access session recordings": int(slice_1[2]), "View posters or attend poster session": int(slice_1[3])}
 
-    # # manual counting for ugly text data
+    # manual counting for ugly text data
 
-    # value_counts_dict_2 = {
-    #     'More than 20 years': 15, '10 to 20 years': 11, '2 years': 9, '3 years': 9,
-    #     '1 year or less': 4, '5 to 10 years': 4, '4 years': 2
-    # }
+    value_counts_dict_2 = {
+        'More than 20 years': 15, '10 to 20 years': 11, '2 years': 9, '3 years': 9,
+        '1 year or less': 4, '5 to 10 years': 4, '4 years': 2
+    }
 
-    # slice_3 = (dfs_2021[38][3])
+    slice_3 = (dfs_2021[38][3])
 
-    # value_counts_dict_3 = {
-    #     'yes, 6 or more times': int(slice_3[4]), 'yes, 2-5 times': int(slice_3[3]), 'no, this was my first time attending the conference': int(slice_3[1]), 'yes, once before': int(slice_3[2])
-    # }
+    value_counts_dict_3 = {
+        'yes, 6 or more times': int(slice_3[4]), 'yes, 2-5 times': int(slice_3[3]), 'no, this was my first time attending the conference': int(slice_3[1]), 'yes, once before': int(slice_3[2])
+    }
 
-    # slice_4 = dfs_2021[40][3]
-    # slice_4b = dfs_2021[40][1]
+    slice_4 = dfs_2021[40][3]
+    slice_4b = dfs_2021[40][1]
 
-    # value_counts_dict_4 = {
-    #     slice_4b[1]: int(slice_4[1]), slice_4b[2]: int(slice_4[2]), slice_4b[3]: int(slice_4[3])
-    # }
+    value_counts_dict_4 = {
+        slice_4b[1]: int(slice_4[1]), slice_4b[2]: int(slice_4[2]), slice_4b[3]: int(slice_4[3])
+    }
 
-    # slice_5 = dfs_2021[41][3]
-    # slice_5b = dfs_2021[41][1]
+    slice_5 = dfs_2021[41][3]
+    slice_5b = dfs_2021[41][1]
 
-    # value_counts_dict_5 = {
-    #     slice_5b[1]: int(slice_5[1]), slice_5b[2]: int(slice_5[2]), slice_5b[3]: int(slice_5[3]), slice_5b[4]: int(slice_5[4]), slice_5b[5]: int(slice_5[5])
-    # }
+    value_counts_dict_5 = {
+        slice_5b[1]: int(slice_5[1]), slice_5b[2]: int(slice_5[2]), slice_5b[3]: int(slice_5[3]), slice_5b[4]: int(slice_5[4]), slice_5b[5]: int(slice_5[5])
+    }
 
-    # slice_6 = dfs_2021[50][3]
-    # slice_6b = dfs_2021[50][1]
+    slice_6 = dfs_2021[50][3]
+    slice_6b = dfs_2021[50][1]
 
-    # value_counts_dict_6 = {
-    #     slice_6b[1]: int(slice_6[1]), slice_6b[2]: int(slice_6[2]), slice_6b[3]: int(slice_6[3]), slice_6b[4]: int(slice_6[4]),
-    #     slice_6b[5]: int(slice_6[5]), slice_6b[6]: int(slice_6[6]), slice_6b[7]: int(slice_6[7]), slice_6b[8]: int(slice_6[8]),
-    #     slice_6b[9]: int(slice_6[9]),
-    # }
+    value_counts_dict_6 = {
+        slice_6b[1]: int(slice_6[1]), slice_6b[2]: int(slice_6[2]), slice_6b[3]: int(slice_6[3]), slice_6b[4]: int(slice_6[4]),
+        slice_6b[5]: int(slice_6[5]), slice_6b[6]: int(slice_6[6]), slice_6b[7]: int(slice_6[7]), slice_6b[8]: int(slice_6[8]),
+        slice_6b[9]: int(slice_6[9]),
+    }
 
-    # slice_7 = dfs_2021[52][3]
-    # slice_7b = dfs_2021[52][1]
+    slice_7 = dfs_2021[52][3]
+    slice_7b = dfs_2021[52][1]
 
-    # value_counts_dict_7 = {
-    #     slice_7b[1]: int(slice_7[1]), slice_7b[2]: int(slice_7[2]), slice_7b[3]: int(slice_7[3]), slice_7b[4]: int(slice_7[4]),
-    #     slice_7b[5]: int(slice_7[5]), slice_7b[6]: int(slice_7[6]), slice_7b[7]: int(slice_7[7]), slice_7b[8]: int(slice_7[8]),
-    #     slice_7b[9]: int(slice_7[9]), slice_7b[10]: int(slice_7[10]), slice_7b[11]: int(slice_7[11]), slice_7b[12]: int(slice_7[12]),
-    #     slice_7b[13]: int(slice_7[13]), slice_7b[14]: int(slice_7[14])
-    # }
+    value_counts_dict_7 = {
+        slice_7b[1]: int(slice_7[1]), slice_7b[2]: int(slice_7[2]), slice_7b[3]: int(slice_7[3]), slice_7b[4]: int(slice_7[4]),
+        slice_7b[5]: int(slice_7[5]), slice_7b[6]: int(slice_7[6]), slice_7b[7]: int(slice_7[7]), slice_7b[8]: int(slice_7[8]),
+        slice_7b[9]: int(slice_7[9]), slice_7b[10]: int(slice_7[10]), slice_7b[11]: int(slice_7[11]), slice_7b[12]: int(slice_7[12]),
+        slice_7b[13]: int(slice_7[13]), slice_7b[14]: int(slice_7[14])
+    }
 
-    # slice_8 = dfs_2021[55][3]
-    # slice_8b = dfs_2021[55][1]
+    slice_8 = dfs_2021[55][3]
+    slice_8b = dfs_2021[55][1]
 
-    # value_counts_dict_8 = {
-    #     slice_8b[1]: int(slice_8[1]), slice_8b[2]: int(slice_8[2]), slice_8b[3]: int(slice_8[3]), slice_8b[4]: int(slice_8[4]),
-    #     slice_8b[5]: int(slice_8[5]), slice_8b[6]: int(slice_8[6])
-    # }
+    value_counts_dict_8 = {
+        slice_8b[1]: int(slice_8[1]), slice_8b[2]: int(slice_8[2]), slice_8b[3]: int(slice_8[3]), slice_8b[4]: int(slice_8[4]),
+        slice_8b[5]: int(slice_8[5]), slice_8b[6]: int(slice_8[6])
+    }
 
-    # slice_9 = dfs_2021[63][3]
-    # slice_9b = dfs_2021[63][1]
+    slice_9 = dfs_2021[63][3]
+    slice_9b = dfs_2021[63][1]
 
-    # value_counts_dict_9 = {
-    #     slice_9b[1]: int(slice_9[1]), slice_9b[2]: int(slice_9[2]), slice_9b[3]: int(slice_9[3])
-    # }
+    value_counts_dict_9 = {
+        slice_9b[1]: int(slice_9[1]), slice_9b[2]: int(slice_9[2]), slice_9b[3]: int(slice_9[3])
+    }
 
-    # print(value_counts_dict_9)
+    print(value_counts_dict_9)
 
-    # dicts = [value_counts_dict_1, value_counts_dict_2, value_counts_dict_3, value_counts_dict_4,
-    #          value_counts_dict_5, value_counts_dict_6, value_counts_dict_7, value_counts_dict_8,
-    #          value_counts_dict_9]
+    dicts = [value_counts_dict_1, value_counts_dict_2, value_counts_dict_3, value_counts_dict_4,
+             value_counts_dict_5, value_counts_dict_6, value_counts_dict_7, value_counts_dict_8,
+             value_counts_dict_9]
 
-    # for i, d in enumerate(dicts):
-    #     dicts[i] = {k: v for k, v in sorted(
-    #         d.items(), key=lambda item: item[1], reverse=True)}
+    for i, d in enumerate(dicts):
+        dicts[i] = {k: v for k, v in sorted(
+            d.items(), key=lambda item: item[1], reverse=True)}
 
-    # value_counts_dict_1, value_counts_dict_2, value_counts_dict_3, value_counts_dict_4, value_counts_dict_5, value_counts_dict_6, value_counts_dict_7, value_counts_dict_8, value_counts_dict_9 = dicts
+    value_counts_dict_1, value_counts_dict_2, value_counts_dict_3, value_counts_dict_4, value_counts_dict_5, value_counts_dict_6, value_counts_dict_7, value_counts_dict_8, value_counts_dict_9 = dicts
 
-    # value_counts_dicts = {
-    #     "What aspects of the virtual conference did you experience? Select all that apply.": value_counts_dict_1,
-    #     "How many years of experience do you have with system dynamics?": value_counts_dict_2,
-    #     "Have you attended the SD conference before?": value_counts_dict_3,
-    #     "How do you evaluate this year’s hybrid format as compared to the purely in presence and virtual formats?": value_counts_dict_4,
-    #     "Which of the following features, if any, would be worthwhile to continue for future conferences? Please select all that apply.": value_counts_dict_5,
-    #     "What is your profession? Please select all that apply.": value_counts_dict_6,
-    #     "What are your fields of interest? Please select all that apply.": value_counts_dict_7,
-    #     "What is your geographic region?": value_counts_dict_8,
-    #     "The next conference is likely to be a hybrid (virtual and in-person) event. In which way would you prefer to attend?": value_counts_dict_9,
-    # }
+    value_counts_dicts = {
+        "What aspects of the virtual conference did you experience? Select all that apply.": value_counts_dict_1,
+        "How many years of experience do you have with system dynamics?": value_counts_dict_2,
+        "Have you attended the SD conference before?": value_counts_dict_3,
+        "How do you evaluate this year’s hybrid format as compared to the purely in presence and virtual formats?": value_counts_dict_4,
+        "Which of the following features, if any, would be worthwhile to continue for future conferences? Please select all that apply.": value_counts_dict_5,
+        "What is your profession? Please select all that apply.": value_counts_dict_6,
+        "What are your fields of interest? Please select all that apply.": value_counts_dict_7,
+        "What is your geographic region?": value_counts_dict_8,
+        "The next conference is likely to be a hybrid (virtual and in-person) event. In which way would you prefer to attend?": value_counts_dict_9,
+    }
 
-    # # print(value_counts_dicts)
+    # print(value_counts_dicts)
 
-    # df = pd.read_csv("categorical_questions.csv", index_col=0)
+    df = pd.read_csv("categorical_questions.csv", index_col=0)
 
-    # if '2021' not in df.index:
-    #     df.loc['2021'] = pd.NA
+    if '2021' not in df.index:
+        df.loc['2021'] = pd.NA
 
-    # for col_name, col_data in value_counts_dicts.items():
-    #     if col_name in df.columns:
-    #         df.at['2021', col_name] = col_data  # assuming year is the index
-    #     else:
-    #         # Add a new column with NaN for all previous rows
-    #         df[col_name] = pd.NA
-    #         df.at['2021', col_name] = col_data
+    for col_name, col_data in value_counts_dicts.items():
+        if col_name in df.columns:
+            df.at['2021', col_name] = col_data  # assuming year is the index
+        else:
+            # Add a new column with NaN for all previous rows
+            df[col_name] = pd.NA
+            df.at['2021', col_name] = col_data
 
-    # df.to_csv("categorical_questions.csv")
+    df.to_csv("categorical_questions.csv")
 
     # boolean dictionaries
 
-    # indices = [47, 49, 59, 61]
-    # questions = [
-    #     "Have you contacted any presenters for more information?",
-    #     "Did you visit any exhibitors during the conference?",
-    #     "Would you recommend this event to others?",
-    #     "Do you plan to attend this conference in the future?"
-    # ]
+    indices = [47, 49, 59, 61]
+    questions = [
+        "Have you contacted any presenters for more information?",
+        "Did you visit any exhibitors during the conference?",
+        "Would you recommend this event to others?",
+        "Do you plan to attend this conference in the future?"
+    ]
 
-    # boolean_value_counts_dicts = {}
+    boolean_value_counts_dicts = {}
 
-    # for idx, question in zip(indices, questions):
-    #     slice_data = dfs_2021[idx][3]
-    #     value_counts_dict = {
-    #         'Yes': int(slice_data[1]),
-    #         'No': int(slice_data[2])
-    #     }
-    #     boolean_value_counts_dicts[question] = value_counts_dict
+    for idx, question in zip(indices, questions):
+        slice_data = dfs_2021[idx][3]
+        value_counts_dict = {
+            'Yes': int(slice_data[1]),
+            'No': int(slice_data[2])
+        }
+        boolean_value_counts_dicts[question] = value_counts_dict
 
-    # print(boolean_value_counts_dicts)
+    print(boolean_value_counts_dicts)
 
-    # df = pd.read_csv("boolean_questions.csv", index_col=0)
+    df = pd.read_csv("boolean_questions.csv", index_col=0)
 
-    # if '2021' not in df.index:
-    #     df.loc['2021'] = pd.NA
+    if '2021' not in df.index:
+        df.loc['2021'] = pd.NA
 
-    # for col_name, col_data in boolean_value_counts_dicts.items():
-    #     if col_name in df.columns:
-    #         df.at['2021', col_name] = col_data  # assuming year is the index
-    #     else:
-    #         # Add a new column with NaN for all previous rows
-    #         df[col_name] = pd.NA
-    #         df.at['2021', col_name] = col_data
+    for col_name, col_data in boolean_value_counts_dicts.items():
+        if col_name in df.columns:
+            df.at['2021', col_name] = col_data  # assuming year is the index
+        else:
+            # Add a new column with NaN for all previous rows
+            df[col_name] = pd.NA
+            df.at['2021', col_name] = col_data
 
-    # df.to_csv("boolean_questions.csv")
+    df.to_csv("boolean_questions.csv")
 
     # numerical dictionaries
 
-    # numerical_indices = [2, 5, 8, 11, 14, 17, 19, 21, 23, 25, 27, 29, 31, 34]
-    # value_counts_dict_list = []
+    numerical_indices = [2, 5, 8, 11, 14, 17, 19, 21, 23, 25, 27, 29, 31, 34]
+    value_counts_dict_list = []
 
-    # # Iterate over special indices
-    # for idx in numerical_indices:
-    #     slice_main = dfs_2021[idx][3]
-    #     slice_helper = dfs_2021[idx][1]
-    #     value_counts_dict = {
-    #         slice_helper[i]: int(slice_main[i]) for i in range(1, 8)
-    #     }
-    #     sorted_value_counts_dict = dict(
-    #         sorted(value_counts_dict.items(), key=lambda item: item[1], reverse=True))
-    #     value_counts_dict_list.append(sorted_value_counts_dict)
+    # Iterate over special indices
+    for idx in numerical_indices:
+        slice_main = dfs_2021[idx][3]
+        slice_helper = dfs_2021[idx][1]
+        value_counts_dict = {
+            slice_helper[i]: int(slice_main[i]) for i in range(1, 8)
+        }
+        sorted_value_counts_dict = dict(
+            sorted(value_counts_dict.items(), key=lambda item: item[1], reverse=True))
+        value_counts_dict_list.append(sorted_value_counts_dict)
 
-    # # Map each dictionary to its respective question
-    # questions = [
-    #     "When it comes to the content of the conference program, my evaluation is:",
-    #     "When it comes to the conference website and access to presented work, my evaluation is:",
-    #     "When it comes to the services provided by the conference organization, including technical support, my evaluation is:",
-    #     "When it comes to the opportunity to socialize at the conference, my evaluation is:",
-    #     "When it comes to overall conference value, my evaluation is:",
-    #     "How do you evaluate the following sessions and workshops? [Plenary sessions]",
-    #     "How do you evaluate the following sessions and workshops? [Parallel sessions]",
-    #     "How do you evaluate the following sessions and workshops? [Work-in-progress (WIP) sessions]",
-    #     "How do you evaluate the following sessions and workshops? [Dialog sessions]",
-    #     "How do you evaluate the following sessions and workshops? [Feedback sessions]",
-    #     "How do you evaluate the following sessions and workshops? [Student-Organized Colloquium]",
-    #     "How do you evaluate the following sessions and workshops? [Virtual poster sessions]",
-    #     "How do you evaluate the following sessions and workshops? [Online workshops]",
-    #     "How do you rate the overall quality of the presented work?"
-    # ]
+    # Map each dictionary to its respective question
+    questions = [
+        "When it comes to the content of the conference program, my evaluation is:",
+        "When it comes to the conference website and access to presented work, my evaluation is:",
+        "When it comes to the services provided by the conference organization, including technical support, my evaluation is:",
+        "When it comes to the opportunity to socialize at the conference, my evaluation is:",
+        "When it comes to overall conference value, my evaluation is:",
+        "How do you evaluate the following sessions and workshops? [Plenary sessions]",
+        "How do you evaluate the following sessions and workshops? [Parallel sessions]",
+        "How do you evaluate the following sessions and workshops? [Work-in-progress (WIP) sessions]",
+        "How do you evaluate the following sessions and workshops? [Dialog sessions]",
+        "How do you evaluate the following sessions and workshops? [Feedback sessions]",
+        "How do you evaluate the following sessions and workshops? [Student-Organized Colloquium]",
+        "How do you evaluate the following sessions and workshops? [Virtual poster sessions]",
+        "How do you evaluate the following sessions and workshops? [Online workshops]",
+        "How do you rate the overall quality of the presented work?"
+    ]
 
-    # numerical_value_counts_dicts = dict(zip(questions, value_counts_dict_list))
+    numerical_value_counts_dicts = dict(zip(questions, value_counts_dict_list))
 
-    # print(numerical_value_counts_dicts)
+    print(numerical_value_counts_dicts)
 
-    # df = pd.read_csv("numerical_questions.csv", index_col=0)
+    df = pd.read_csv("numerical_questions.csv", index_col=0)
 
-    # if '2021' not in df.index:
-    #     df.loc['2021'] = pd.NA
+    if '2021' not in df.index:
+        df.loc['2021'] = pd.NA
 
-    # for col_name, col_data in numerical_value_counts_dicts.items():
-    #     if col_name in df.columns:
-    #         df.at['2021', col_name] = col_data  # assuming year is the index
-    #     else:
-    #         # Add a new column with NaN for all previous rows
-    #         df[col_name] = pd.NA
-    #         df.at['2021', col_name] = col_data
+    for col_name, col_data in numerical_value_counts_dicts.items():
+        if col_name in df.columns:
+            df.at['2021', col_name] = col_data  # assuming year is the index
+        else:
+            # Add a new column with NaN for all previous rows
+            df[col_name] = pd.NA
+            df.at['2021', col_name] = col_data
 
-    # df.to_csv("numerical_questions.csv")
+    df.to_csv("numerical_questions.csv")
 
     # text dictionaries
 
