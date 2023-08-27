@@ -32,10 +32,250 @@ def year_2013():
     document_2013 = Document("data/2013 Report survey.docx")
     # print out all columns for categorization
 
-    for paragraph in document_2013.paragraphs:
-        if any(run.bold for run in paragraph.runs):
-            if not any(substring in paragraph.text for substring in ["Text Entry", "View More", "%", "Answer"]):
-                print(paragraph.text)
+    # for paragraph in document_2013.paragraphs:
+    #     if any(run.bold for run in paragraph.runs):
+    #         if not any(substring in paragraph.text for substring in ["Text Entry", "View More", "%", "Answer"]):
+    #             print(paragraph.text)
+
+    for table in document_2013.tables:
+        text = [[cell.text for cell in row.cells] for row in table.rows]
+        df = pd.DataFrame(text)
+        dfs_2013.append(df)
+
+    print(len(dfs_2013))
+    print(type(dfs_2013))
+
+    print(type(dfs_2013[0]))
+
+    print("data_type: " + str(type(dfs_2013)))
+    print("data_type item: " + str(type(dfs_2013[0])))
+    # print(dfs_2013[0:7])
+
+    # categorical dictionaries
+
+    # manual counting for ugly text data
+
+    print(dfs_2013[38])
+
+    slice_3 = dfs_2013[36][3]
+    slice_3b = dfs_2013[36][1]
+    slice_3b = [element.strip() for element in slice_3b]
+
+    value_counts_dict_3 = {
+        slice_3b[1]: int(slice_3[1]), slice_3b[2]: int(slice_3[2]), slice_3b[3]: int(slice_3[3]), slice_3b[4]: int(slice_3[4]),
+        slice_3b[3]: int(slice_3[3]), slice_3b[6]: int(slice_3[6]), slice_3b[3]: int(slice_3[3]), slice_3b[8]: int(slice_3[8])
+    }
+
+    slice_4 = dfs_2013[38][3]
+    slice_4b = dfs_2013[38][1]
+    slice_4b = [element.strip() for element in slice_4b]
+
+    value_counts_dict_4 = {
+        slice_4b[1]: int(slice_4[1]), slice_4b[2]: int(slice_4[2]), slice_4b[3]: int(slice_4[3]), slice_4b[4]: int(slice_4[4]),
+        slice_4b[5]: int(slice_4[5]), slice_4b[6]: int(slice_4[6]), slice_4b[4]: int(slice_4[4]), slice_4b[8]: int(slice_4[8]),
+        slice_4b[9]: int(slice_4[9]), slice_4b[10]: int(slice_4[10]), slice_4b[11]: int(slice_4[11]), slice_4b[12]: int(slice_4[12]),
+        slice_4b[13]: int(slice_4[13]), slice_4b[14]: int(slice_4[14])
+    }
+
+    slice_5 = dfs_2013[41][3]
+    slice_5b = dfs_2013[41][1]
+    slice_5b = [element.strip() for element in slice_5b]
+
+    value_counts_dict_5 = {
+        slice_5b[1]: int(slice_5[1]), slice_5b[2]: int(slice_5[2]), slice_5b[3]: int(slice_5[3]), slice_5b[5]: int(slice_5[5]),
+        slice_5b[5]: int(slice_5[5]), slice_5b[6]: int(slice_5[6]), slice_5b[7]: int(slice_5[7])
+    }
+
+    value_counts_dict_6 = {
+        'More than 20 years': 1, '10 to 20 years': 2, '2 years': 1, '3 years': 1,
+        '1 year or less': 3, '5 to 10 years': 0, '4 years': 1
+    }
+
+    slice_2 = dfs_2013[39][3]
+    slice_2b = dfs_2013[39][1]
+    slice_2b = [element.strip() for element in slice_2b]
+
+    value_counts_dict_2 = {
+        slice_2b[1]: int(slice_2[1]), slice_2b[2]: int(slice_2[2]), slice_2b[3]: int(slice_2[3]), slice_2b[4]: int(slice_2[4])
+    }
+
+    slice_1 = dfs_2013[47][3]
+    slice_1b = dfs_2013[47][1]
+    slice_1b = [element.strip() for element in slice_1b]
+
+    value_counts_dict_1 = {
+        slice_1b[1]: int(slice_1[1]), slice_1b[2]: int(slice_1[2]), slice_1b[3]: int(slice_1[3]), slice_1b[4]: int(slice_1[4]), slice_1b[5]: int(slice_1[5])
+    }
+
+    # print(value_counts_dict_1)
+
+    dicts = [value_counts_dict_1, value_counts_dict_2, value_counts_dict_3, value_counts_dict_4,
+             value_counts_dict_5, value_counts_dict_6]
+
+    for i, d in enumerate(dicts):
+        dicts[i] = {k: v for k, v in sorted(
+            d.items(), key=lambda item: item[1], reverse=True)}
+
+    value_counts_dict_1, value_counts_dict_2, value_counts_dict_3, value_counts_dict_4, value_counts_dict_5, value_counts_dict_6 = dicts
+
+    value_counts_dicts = {
+        "Have you attended the SD conference before?": value_counts_dict_2,
+        "What is your profession? Please select all that apply.": value_counts_dict_3,
+        "What are your fields of interest? Please select all that apply.": value_counts_dict_4,
+        "What is your geographic region?": value_counts_dict_5,
+        "If you have used the Conference Online Scheduler, which device have you used? Please check all that apply.": value_counts_dict_1,
+        "How many years of experience do you have with system dynamics?": value_counts_dict_6,
+    }
+
+    print(value_counts_dicts)
+
+    df = pd.read_csv("categorical_questions.csv", index_col=0)
+
+    if '2013' not in df.index:
+        df.loc['2013'] = pd.NA
+
+    for col_name, col_data in value_counts_dicts.items():
+        if col_name in df.columns:
+            df.at['2013', col_name] = col_data  # assuming year is the index
+        else:
+            # Add a new column with NaN for all previous rows
+            df[col_name] = pd.NA
+            df.at['2013', col_name] = col_data
+
+    df.to_csv("categorical_questions.csv")
+
+    # boolean dictionaries
+
+    boolean_value_counts_dicts = {
+        "An idea that is considered for future conferences, is to make the conference schedule available using a smartphone app. For that reason, we would like to ask you if you own a smartphone.": {"Yes": 110, "No": 22},
+        "Have you used the Conference Online Scheduler?": {"Yes": 45, "No": 86},
+    }
+
+    print(boolean_value_counts_dicts)
+
+    df = pd.read_csv("boolean_questions.csv", index_col=0)
+
+    if '2013' not in df.index:
+        df.loc['2013'] = pd.NA
+
+    for col_name, col_data in boolean_value_counts_dicts.items():
+        if col_name in df.columns:
+            df.at['2013', col_name] = col_data  # assuming year is the index
+        else:
+            # Add a new column with NaN for all previous rows
+            df[col_name] = pd.NA
+            df.at['2013', col_name] = col_data
+
+    df.to_csv("boolean_questions.csv")
+
+    # numerical dictionaries
+
+    print(dfs_2013[20])
+
+    numerical_indices = [1, 3, 5, 7, 9, 11, 13, 15, 17, 20, 21, 23,
+                         24, 25, 28, 29, 30]
+    value_counts_dict_list = []
+
+    # Iterate over special indices
+    for idx in numerical_indices:
+        print(idx)
+        slice_main = dfs_2013[idx][3]
+        slice_helper = dfs_2013[idx][1]
+        slice_helper = [element.strip() for element in slice_helper]
+        value_counts_dict = {
+            slice_helper[i]: int(slice_main[i]) for i in range(1, 8)
+        }
+        sorted_value_counts_dict = dict(
+            sorted(value_counts_dict.items(), key=lambda item: item[1], reverse=True))
+        value_counts_dict_list.append(sorted_value_counts_dict)
+
+    # Map each dictionary to its respective question
+    questions = [
+        "When it comes to the content of the conference program, my evaluation is:",
+        "When it comes to the services provided by the conference organization, including technical support, my evaluation is:",
+        "When it comes to conference geographical location my evaluation is:",
+        "When it comes to the conference venue (building and facilities) my evaluation is:",
+        "When it comes to the opportunity to socialize at the conference, my evaluation is:",
+        "When it comes to overall conference value, my evaluation is:",
+        "When it comes to the conference fee my evaluation is:",
+        "When it comes to the overnight accommodation my evaluation is:",
+        "When it comes to the printed abstract proceedings for use at the conference my evaluation is:",
+        "Are the plenary sessions too short or too long?",
+        "Should we have more or fewer plenary sessions?",
+        "Are the parallel sessions too short or too long?",
+        "Should we have more or fewer parallel sessions?",
+        "How do you evaluate the following sessions and workshops? [In-presence poster session]",
+        "What is your opinion about the duration of the breaks during the conference?",
+        "Would you like to see more or less academic work (as compared to applications)?",
+        "How satisfied are you with the workshops?",
+    ]
+
+    numerical_value_counts_dicts = dict(zip(questions, value_counts_dict_list))
+
+    print(numerical_value_counts_dicts)
+
+    df = pd.read_csv("numerical_questions.csv", index_col=0)
+
+    if '2013' not in df.index:
+        df.loc['2013'] = pd.NA
+
+    for col_name, col_data in numerical_value_counts_dicts.items():
+        if col_name in df.columns:
+            df.at['2013', col_name] = col_data  # assuming year is the index
+        else:
+            # Add a new column with NaN for all previous rows
+            df[col_name] = pd.NA
+            df.at['2013', col_name] = col_data
+
+    df.to_csv("numerical_questions.csv")
+
+    # text dictionaries
+
+    # print(dfs_2013[26])
+
+    questions = [
+        "Additional comments",
+        "Additional comments 2",
+        "Additional comments 3",
+        "Additional comments 4",
+        "Additional comments 5",
+        "Additional comments 6",
+        "Additional comments 7",
+        "Additional comments 8",
+        "If you have any comments on session formats, please list them here.",
+        "If you could make changes to the format of the workshops, what would those changes be?",
+        "What do you value most about participating in the conference?",
+        "What was the best thing that happened to you at the conference?",
+        "What was the worst thing that happened to you at the conference?",
+        "Other (please specify)",
+        "Other (please specify) 2",
+        "Other (please specify) 3",
+        "Any other comments you may have"
+    ]
+    text_list = []
+    text_indices = [2, 4, 6, 8, 10, 12, 14, 16, 18,
+                    26, 31, 32, 33, 34, 37, 40, 42, 48]
+
+    for i in text_indices:
+        text_list.append(dfs_2013[i][0][1:].values)
+
+    text_value_counts_dicts = dict(zip(questions, text_list))
+    print(text_value_counts_dicts)
+
+    df = pd.read_csv("text_responses.csv", index_col=0)
+
+    if '2013' not in df.index:
+        df.loc['2013'] = pd.NA
+
+    for col_name, col_data in text_value_counts_dicts.items():
+        if col_name in df.columns:
+            df.at['2013', col_name] = col_data  # assuming year is the index
+        else:
+            # Add a new column with NaN for all previous rows
+            df[col_name] = pd.NA
+            df.at['2013', col_name] = col_data
+
+    df.to_csv("text_responses.csv")
 
 
 def year_2014():
@@ -2024,6 +2264,9 @@ def year_2022():
 
 
 def main():
+
+    # RUN ALL 9 of them to generate the csv of the processed data!
+
     # year_2022()
     # year_2021()
     # year_2020()
@@ -2032,12 +2275,13 @@ def main():
     # year_2016()
     # year_2015()
     # year_2014()
-    year_2013()
+    # year_2013()
 
     # Make big csv from pandas dataframe with year, categorical variables, Q1, Q2, Q19-23, Q26-31, 13 columns
     # Make big csv from pandas dataframe with year, boolean variables, Q24-25, Q32-33, 4 columns
     # Make big csv from pandas dataframe with year, numerical ratings, Q3-18, 16 columns
     # Make big csv from pandas dataframe with year, additional response strings, Addition Qs 1-5, others 11 columns
+    pass
 
 
 if __name__ == "__main__":
