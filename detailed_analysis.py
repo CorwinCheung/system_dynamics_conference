@@ -22,11 +22,11 @@
 # more of, while the most frequent keywords in the negative responses will give an
 # indication of the things that attendees disliked and want to change.
 
-from textblob import TextBlob
-import pandas as pd
-import numpy as np
 import re
 import ast
+import numpy as np
+import pandas as pd
+from textblob import TextBlob
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 

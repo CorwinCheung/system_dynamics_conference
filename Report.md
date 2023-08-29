@@ -1,3 +1,15 @@
+# Numerical Analysis
+
+## Techniques used:
+
+# Categorical Analysis
+
+## Techniques used:
+
+# Boolean Analysis
+
+## Techniques used:
+
 # Text Analysis
 
 ## Techniques used:
