@@ -14,6 +14,7 @@
 
 ## Techniques used:
 
+- General pandas, numpy, re, ast, processing, wrangling: lambda functions, list comprehension, etc. 
 - Textblob library sentiment analysis to classify responses into positive, negative, and neutral
 - TF-IDF Vectorization to extract keywords and n-grams from the text
 - Latent Dirichlet Allocation(LDA) topic modeling, to get representative responses for each topics
