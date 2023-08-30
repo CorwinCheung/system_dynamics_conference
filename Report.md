@@ -1,24 +1,168 @@
 # Numerical Analysis
 
 ## Techniques used:
--Gathered data and plotted weighted averages over the years as trend diagrams
--Looked at in person to virtual and virtual to hybrid transitions to see what trends were statistically significany
+
+- Gathered data and plotted weighted averages over the years as trend diagrams
+- Looked at in person to virtual and virtual to hybrid transitions to see what trends were statistically significant
+
+## Trend diagrams:
+
+![image](figures/Survey_Takers_per_Year.png)
+
+Insights
+
+- The number of survey responses has been relatively stable over the years
+- The outliers are very few survey takers in 2019 and very many survey takers in 2020, this could be due to the format of the conferences during these years
+
+![image](figures/Numerical_Trend_1.png)
+
+Insights
+
+- The overall conference value and quality of presented work have been consistently high over the years, with average ratings around 5.95 and 5.94, respectively
+- There has been a slight downtrend in recent years, and we should inspect this further
+
+![image](figures/Numerical_Trend_2.png)
+
+Insights
+
+- The quality of services provided by the conference organization, including technical support, has been consistently rated around 6 (on a scale of 1 to 7) over the years. There are minor fluctuations, but the overall trend is quite stable.
+- The quality of socialization opportunities at the conference has seen a decline since the transition to virtual and hybrid environments, but is making a return with more in person events.
+- The rating of the conference's geographical location varies significantly from year to year, with no clear trend.
+
+![image](figures/Numerical_Trend_3.png)
+
+Insights
+
+- The quality of the conference venue (building and facilities) has been consistently rated around 5.5 over the years, with slight fluctuations.
+- The rating of the conference fee has seen a slight decline over the years, from around 5.5 to just below 5. This suggests that attendees may be finding the conference fee too high recently.
+- The rating of the overnight accommodation has been quite variable, with a significant dip in 2018 but otherwise remaining around 5.4.
+
+![image](figures/Numerical_Trend_4.png)
+
+Insights
+
+- The rating of the quality of the sessions seem to trend together, with small differences.
+- The rating of WIP (Work-in-progress) sessions has been quite stable over the years, remaining around 5.25.
+
+![image](figures/Numerical_Trend_5.png)
+
+Insights
+
+- The rating of Feedback Sessions, Student-Organized Colloquium, Virtual Poster Sessions, and In-Presence Poster Sessions seem to be less valuable than the Plenary and parallel sessions, as these four session formats tend to vary between an approval rating of 5.0 and 5.5
+- There are significant fluctuations from year to year, but it is hard to discern a certain pattern.
+
+![image](figures/Numerical_Trend_6.png)
+
+## Insights
+
+- There isn't enough data to make significant claims about the trends of ratings of Roundtables, Online Workshops, Hybrid Workshops, and Dialog Sessions.
+- However it seems that with the introduction of hybrid workshops, the online workshops are less appealing
+
+![image](figures/Numerical_Trend_7.png)
+
+## Insights
+
+- These ratings have remained quite stable over the years
+- People generally want a slightly more plenary and parallel sessions, with the parallel sessions to be slightly longer and the plenary sessions be shorter.
+
+![image](figures/Numerical_Trend_8.png)
+
+## Insights
+
+- These ratings have remained stable over the years.
+- People generally are satisified with the workshops and think the breaks are a bit too long and want to see a bit more academic work.
+
+## Shifts from In Person to Virtual and Virtual to Hybrid
+
+In Person to Virtual(2019->2020)
+| Aspect | P-value |
+|----------------------------------------------|----------------------------|
+| Conference Program | 0.27505133557392003 |
+| Services Provided | 0.0016128280780466115 |
+| Opportunity to Socialize | 0.00043565698708557466 |
+| Overall Conference Value | 0.16234774945772223 |
+| WIP Sessions | 0.06245843923385839 |
+| Feedback Sessions | 0.15886499517387664 |
+| Overall Quality of Presented Work | 0.0012851427890954858 |
+
+- Significant differences are in Opportunities to socialize(went down), services including techical support(went up), and overall quality of presented work(went up)
+
+Virtual to Hybrid(2021-2022)
+| Aspect | P-value |
+|----------------------------------------------|----------------------------|
+| Conference Program | 0.05661157869320761 |
+| Conference Website and Access | 0.2074564956037631 |
+| Services Provided | 0.19883921437196705 |
+| Opportunity to Socialize | 0.03214420226557648 |
+| Overall Conference Value | 0.14808913863450685 |
+| Plenary Sessions | 0.18731611396871084 |
+| Parallel Sessions | 0.6351484645609424 |
+| WIP Sessions | 0.7687559578688791 |
+| Feedback Sessions | 0.8496341358551341 |
+| Student-Organized Colloquium | 0.1265650572928322 |
+| Virtual Poster Sessions | 0.28475043430487246 |
+| Online Workshops | 0.8628103932564655 |
+| Overall Quality of Presented Work | 0.13277746916204475 |
+
+- Significant: Opportunity to socialize at conference: 0.03214420226557648(Went up)
 
 # Categorical Analysis
 
 ## Techniques used:
+
 -Gathered data and plotted weighted averages over the years as trend diagrams
+
+## Trend diagrams:
+
+![image](figures/Categorical_Trend_1.png)
+
+## Insights
+
+-
+
+![image](figures/Categorical_Trend_2.png)
+
+## Insights
+
+-
+
+![image](figures/Categorical_Trend_3.png)
+
+## Insights
+
+-
+
+![image](figures/Categorical_Trend_4.png)
+
+## Insights
+
+-
+
+![image](figures/Categorical_Trend_5.png)
+
+## Insights
+
+-
 
 # Boolean Analysis
 
 ## Techniques used:
+
 -Gathered data and plotted weighted averages over the years as trend diagrams
+
+## Trend diagrams:
+
+![image](figures/Boolean_Trends.png)
+
+## Insights
+
+-
 
 # Text Analysis
 
 ## Techniques used:
 
-- General pandas, numpy, re, ast, processing, wrangling: lambda functions, list comprehension, etc. 
+- General pandas, numpy, re, ast, processing, wrangling: lambda functions, list comprehension, etc.
 - Textblob library sentiment analysis to classify responses into positive, negative, and neutral
 - TF-IDF Vectorization to extract keywords and n-grams from the text
 - Latent Dirichlet Allocation(LDA) topic modeling, to get representative responses for each topics
