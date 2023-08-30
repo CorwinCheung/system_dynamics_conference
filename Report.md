@@ -1,14 +1,18 @@
 # Numerical Analysis
 
 ## Techniques used:
+-Gathered data and plotted weighted averages over the years as trend diagrams
+-Looked at in person to virtual and virtual to hybrid transitions to see what trends were statistically significany
 
 # Categorical Analysis
 
 ## Techniques used:
+-Gathered data and plotted weighted averages over the years as trend diagrams
 
 # Boolean Analysis
 
 ## Techniques used:
+-Gathered data and plotted weighted averages over the years as trend diagrams
 
 # Text Analysis
 
