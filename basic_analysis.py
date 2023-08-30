@@ -23,6 +23,7 @@ import spacy
 from sklearn.decomposition import LatentDirichletAllocation
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from wordcloud import WordCloud
+from scipy.stats import mannwhitneyu
 
 
 def basic_preprocess_text(text):
@@ -98,6 +99,29 @@ def calculate_percentage(response_dict):
         total_responses = sum(response_dict.values())
         return {k: (v / total_responses) * 100 for k, v in response_dict.items()}
     return {k: 0 for k in range(1, 8)}
+
+
+def new_safe_eval(val):
+    try:
+        return ast.literal_eval(val)
+    except (ValueError, SyntaxError) as e:
+        return val
+
+
+def transform_data(data):
+    transformed_data = {}
+    for year, responses in data.items():
+        transformed_data[year] = []
+        for response, count in responses.items():
+            if "No opinion" == response:
+                continue
+            if isinstance(response, int):
+                transformed_data[year].extend([response] * count)
+            else:
+                # Convert the response to an integer (e.g., '7: very positive' to 7)
+                response_int = int(response.split(':')[0])
+                transformed_data[year].extend([response_int] * count)
+    return transformed_data
 
 
 def main():
@@ -303,14 +327,14 @@ def main():
 
     # screen out for uninformatived entities
 
-    # Second part: trend analysis
+    # # Second part: trend analysis
 
-    # Numerical trend analysis
+    # # Numerical trend analysis
 
     file_path = 'numerical_questions.csv'
     numerical_data = pd.read_csv(file_path)
 
-    # Rename the column for 'Year'
+    # # Rename the column for 'Year'
     numerical_data = numerical_data.rename(columns={'Unnamed: 0': 'Year'})
     years = numerical_data['Year']
 
@@ -748,6 +772,82 @@ def main():
     plt.legend()
     plt.show()
 
+    # Third part: time series cutoff, in person vs virtual
 
-    # Third part: time series cutoff, in person vs hybrid
+    # Looking at rows 2020(virtual) and 2019(in person) and comparing between questions that were asking in both
+
+    # Numerical Questions that were asked in both
+
+    numerical_columns = ["When it comes to the content of the conference program, my evaluation is:",
+                         "When it comes to the services provided by the conference organization, including technical support, my evaluation is:",
+                         "When it comes to the opportunity to socialize at the conference, my evaluation is:",
+                         "When it comes to overall conference value, my evaluation is:",
+                         "How do you evaluate the following sessions and workshops? [Work-in-progress (WIP) sessions]",
+                         "How do you evaluate the following sessions and workshops? [Feedback sessions]",
+                         "How do you rate the overall quality of the presented work?",
+                         ]
+
+    filtered_data = numerical_data.loc[numerical_data['Year'].isin(
+        [2019, 2020]), numerical_columns]
+
+    for column in numerical_columns:
+        filtered_data[column] = filtered_data[column].apply(new_safe_eval)
+
+    # Transform the data
+    transformed_data = {column: transform_data(
+        filtered_data[column]) for column in numerical_columns}
+
+    # print(transformed_data)
+
+    # Perform the Mann-Whitney U test
+    p_values = {}
+    for column, data in transformed_data.items():
+        stat, p = mannwhitneyu(data[2], data[3], alternative='two-sided')
+        p_values[column] = p
+
+    for key, value in p_values.items():
+        print(f"{key}: {value}")
+
+    # Significant differences are in Opportunities to socialize(went down), services
+    # including techical support(went up), and overall quality of presented work(went up)
+
+    numerical_columns = ["When it comes to the content of the conference program, my evaluation is:",
+                         "When it comes to the conference website and access to presented work, my evaluation is:",
+                         "When it comes to the services provided by the conference organization, including technical support, my evaluation is:",
+                         "When it comes to the opportunity to socialize at the conference, my evaluation is:",
+                         "When it comes to overall conference value, my evaluation is:",
+                         "How do you evaluate the following sessions and workshops? [Plenary sessions]",
+                         "How do you evaluate the following sessions and workshops? [Parallel sessions]",
+                         "How do you evaluate the following sessions and workshops? [Work-in-progress (WIP) sessions]",
+                         "How do you evaluate the following sessions and workshops? [Feedback sessions]",
+                         "How do you evaluate the following sessions and workshops? [Student-Organized Colloquium]",
+                         "How do you evaluate the following sessions and workshops? [Virtual poster sessions]",
+                         "How do you evaluate the following sessions and workshops? [Online workshops]",
+                         "How do you rate the overall quality of the presented work?",
+                         ]
+
+    filtered_data = numerical_data.loc[numerical_data['Year'].isin(
+        [2021, 2022]), numerical_columns]
+
+    for column in numerical_columns:
+        filtered_data[column] = filtered_data[column].apply(new_safe_eval)
+
+    # Transform the data
+    transformed_data = {column: transform_data(
+        filtered_data[column]) for column in numerical_columns}
+
+    # print(transformed_data)
+
+    # Perform the Mann-Whitney U test
+    p_values = {}
+    for column, data in transformed_data.items():
+        stat, p = mannwhitneyu(data[0], data[1], alternative='two-sided')
+        p_values[column] = p
+
+    for key, value in p_values.items():
+        print(f"{key}: {value}")
+
+    # Significant: Opportunity to socialize at conference: 0.03214420226557648(Went up)
+
+
 main()
