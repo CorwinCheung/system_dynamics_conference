@@ -12,13 +12,12 @@
 # versus when the conference was fully remote vs hybrid, we can draw conclusions
 # based on the survey responses to see how this affected attendee experience.
 
-
-import tensorflow as tf
 import re
 from collections import Counter
 from ast import literal_eval
 
 import matplotlib.pyplot as plt
+import ast
 import pandas as pd
 import spacy
 from sklearn.decomposition import LatentDirichletAllocation
@@ -73,239 +72,240 @@ def convert_string_to_dict(value):
     return {extract_numeric_key(str(k)): v for k, v in value.items() if extract_numeric_key(str(k)) != 0}
 
 
+def calculate_yes_percentage(response_dict):
+    if pd.isna(response_dict):
+        return -1
+    if isinstance(response_dict, str):
+        response_dict = ast.literal_eval(response_dict)
+    if response_dict:
+        total_responses = sum(response_dict.values())
+        yes_responses = response_dict.get('Yes', 0)
+        return (yes_responses / total_responses) * 100
+    return 0
+
+
+def safe_eval(cell):
+    if isinstance(cell, str):
+        return eval(cell)
+    else:
+        return cell
+
+
+def calculate_percentage(response_dict):
+    if pd.isna(response_dict):
+        return {k: 0 for k in range(1, 8)}
+    if response_dict:
+        total_responses = sum(response_dict.values())
+        return {k: (v / total_responses) * 100 for k, v in response_dict.items()}
+    return {k: 0 for k in range(1, 8)}
+
+
 def main():
 
     # First part: text data mining
 
     # Load the data
-    # file_path = 'text_responses.csv'
-    # data = pd.read_csv(file_path)
+    file_path = 'text_responses.csv'
+    data = pd.read_csv(file_path)
 
-    # print("Text Data:" + str(data.head()))
+    print("Text Data:" + str(data.head()))
 
-    # # Apply the basic preprocessing to each column of the dataset
-    # basic_preprocessed_data = data.applymap(
-    #     lambda x: basic_preprocess_text(str(x)) if pd.notna(x) else '')
+    # Apply the basic preprocessing to each column of the dataset
+    basic_preprocessed_data = data.applymap(
+        lambda x: basic_preprocess_text(str(x)) if pd.notna(x) else '')
 
-    # # Combine all the text data into a list of comments
-    # comments = basic_preprocessed_data.apply(
-    #     lambda x: ' '.join(x), axis=1).tolist()
-    # comments = [comment.replace('nmeeting', 'meeting') for comment in comments]
-    # comments = [comment.replace('ni', 'i') for comment in comments]
+    # Combine all the text data into a list of comments
+    comments = basic_preprocessed_data.apply(
+        lambda x: ' '.join(x), axis=1).tolist()
+    comments = [comment.replace('nmeeting', 'meeting') for comment in comments]
+    comments = [comment.replace('ni', 'i') for comment in comments]
 
-    # print("Comments:" + str(comments[0]))
-    # # print the head of comments
+    print("Comments:" + str(comments[0]))
+    # print the head of comments
 
-    # text_corpus = ' '.join(comments)
+    text_corpus = ' '.join(comments)
 
-    # # Create and display the word cloud
-    # # Make a word cloud of most common words in the responses:
-    # # Specify stop words manually
-    # stop_words = set([
-    #     'a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', 'an', 'and', 'any', 'are', "aren't", 'as', 'at',
-    #     'be', 'because', 'been', 'before', 'being', 'below', 'between', 'both', 'but', 'by',
-    #     'can', "can't", 'cannot', 'could', "couldn't", 'did', "didn't", 'do', 'does', "doesn't", 'doing', "don't", 'down', 'during',
-    #     'each', 'few', 'for', 'from', 'further',
-    #     'had', "hadn't", 'has', "hasn't", 'have', "haven't", 'having', 'he', "he'd", "he'll", "he's", 'her', 'here', "here's",
-    #     'hers', 'herself', 'him', 'himself', 'his', 'how', "how's",
-    #     'i', "i'd", "i'll", "i'm", "i've", 'if', 'in', 'into', 'is', "isn't", 'it', "it's", 'its', 'itself',
-    #     "let's", 'me', 'more', 'most', "mustn't", 'my', 'myself',
-    #     'no', 'nor', 'not', 'of', 'off', 'on', 'once', 'only', 'or', 'other', 'ought', 'our', 'ours', 'ourselves', 'out', 'over', 'own',
-    #     'same', "shan't", 'she', "she'd", "she'll", "she's", 'should', "shouldn't", 'so', 'some', 'such',
-    #     'than', 'that', "that's", 'the', 'their', 'theirs', 'them', 'themselves', 'then', 'there', "there's", 'these', 'they',
-    #     "they'd", "they'll", "they're", "they've", 'this', 'those', 'through', 'to', 'too', 'under', 'until', 'up', 'very',
-    #     'was', "wasn't", 'we', "we'd", "we'll", "we're", "we've", 'were', "weren't", 'what', "what's", 'when', "when's", 'where',
-    #     "where's", 'which', 'while', 'who', "who's", 'whom', 'why', "why's", 'with', "won't", 'would', "wouldn't",
-    #     'you', "you'd", "you'll", "you're", "you've", 'your', 'yours', 'yourself', 'yourselves', 'aren', 'couldn', 'didn', 'doesn', 'don',
-    #     'hadn', 'hasn', 'haven', 'isn', 'let', 'll', 'mustn', 're', 'shan', 'shouldn', 've', 'wasn', 'weren', 'won', 'wouldn',
-    # ])
+    # Create and display the word cloud
+    # Make a word cloud of most common words in the responses:
+    # Specify stop words manually
+    stop_words = set([
+        'a', 'about', 'above', 'after', 'again', 'against', 'all', 'am', 'an', 'and', 'any', 'are', "aren't", 'as', 'at',
+        'be', 'because', 'been', 'before', 'being', 'below', 'between', 'both', 'but', 'by',
+        'can', "can't", 'cannot', 'could', "couldn't", 'did', "didn't", 'do', 'does', "doesn't", 'doing', "don't", 'down', 'during',
+        'each', 'few', 'for', 'from', 'further',
+        'had', "hadn't", 'has', "hasn't", 'have', "haven't", 'having', 'he', "he'd", "he'll", "he's", 'her', 'here', "here's",
+        'hers', 'herself', 'him', 'himself', 'his', 'how', "how's",
+        'i', "i'd", "i'll", "i'm", "i've", 'if', 'in', 'into', 'is', "isn't", 'it', "it's", 'its', 'itself',
+        "let's", 'me', 'more', 'most', "mustn't", 'my', 'myself',
+        'no', 'nor', 'not', 'of', 'off', 'on', 'once', 'only', 'or', 'other', 'ought', 'our', 'ours', 'ourselves', 'out', 'over', 'own',
+        'same', "shan't", 'she', "she'd", "she'll", "she's", 'should', "shouldn't", 'so', 'some', 'such',
+        'than', 'that', "that's", 'the', 'their', 'theirs', 'them', 'themselves', 'then', 'there', "there's", 'these', 'they',
+        "they'd", "they'll", "they're", "they've", 'this', 'those', 'through', 'to', 'too', 'under', 'until', 'up', 'very',
+        'was', "wasn't", 'we', "we'd", "we'll", "we're", "we've", 'were', "weren't", 'what', "what's", 'when', "when's", 'where',
+        "where's", 'which', 'while', 'who', "who's", 'whom', 'why', "why's", 'with', "won't", 'would', "wouldn't",
+        'you', "you'd", "you'll", "you're", "you've", 'your', 'yours', 'yourself', 'yourselves', 'aren', 'couldn', 'didn', 'doesn', 'don',
+        'hadn', 'hasn', 'haven', 'isn', 'let', 'll', 'mustn', 're', 'shan', 'shouldn', 've', 'wasn', 'weren', 'won', 'wouldn',
+    ])
+
+    wordcloud = WordCloud(width=800, height=400, background_color='white',
+                          stopwords=stop_words).generate(text_corpus)
+    plt.figure(figsize=(10, 7))
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis('off')
+    plt.show()
+
+    # conference_2022 = comments[0]
 
     # wordcloud = WordCloud(width=800, height=400, background_color='white',
-    #                       stopwords=stop_words).generate(text_corpus)
+    #                       stopwords=stop_words).generate(conference_2022)
     # plt.figure(figsize=(10, 7))
     # plt.imshow(wordcloud, interpolation='bilinear')
     # plt.axis('off')
     # plt.show()
 
-    # # conference_2022 = comments[0]
+    # conference_2021 = comments[1]
 
-    # # wordcloud = WordCloud(width=800, height=400, background_color='white',
-    # #                       stopwords=stop_words).generate(conference_2022)
-    # # plt.figure(figsize=(10, 7))
-    # # plt.imshow(wordcloud, interpolation='bilinear')
-    # # plt.axis('off')
-    # # plt.show()
+    # wordcloud = WordCloud(width=800, height=400, background_color='white',
+    #                       stopwords=stop_words).generate(conference_2021)
+    # plt.figure(figsize=(10, 7))
+    # plt.imshow(wordcloud, interpolation='bilinear')
+    # plt.axis('off')
+    # plt.show()
 
-    # # conference_2021 = comments[1]
+    # conference_2019 = comments[3]
 
-    # # wordcloud = WordCloud(width=800, height=400, background_color='white',
-    # #                       stopwords=stop_words).generate(conference_2021)
-    # # plt.figure(figsize=(10, 7))
-    # # plt.imshow(wordcloud, interpolation='bilinear')
-    # # plt.axis('off')
-    # # plt.show()
+    # wordcloud = WordCloud(width=800, height=400, background_color='white',
+    #                       stopwords=stop_words).generate(conference_2019)
+    # plt.figure(figsize=(10, 7))
+    # plt.imshow(wordcloud, interpolation='bilinear')
+    # plt.axis('off')
+    # plt.show()
 
-    # # conference_2019 = comments[3]
+    # Make a wordcloud for a in person workshop(2019)
+    # Make a wordcloud for a virtual workshop(2021)
+    # Make a wordcloud for a hybrid workshop(2022)
 
-    # # wordcloud = WordCloud(width=800, height=400, background_color='white',
-    # #                       stopwords=stop_words).generate(conference_2019)
-    # # plt.figure(figsize=(10, 7))
-    # # plt.imshow(wordcloud, interpolation='bilinear')
-    # # plt.axis('off')
-    # # plt.show()
+    # this list now has one comment per row of original data
+    # now that we processed the data, we will carry out topic modeling
 
-    # # Make a wordcloud for a in person workshop(2019)
-    # # Make a wordcloud for a virtual workshop(2021)
-    # # Make a wordcloud for a hybrid workshop(2022)
+    vectorizer = CountVectorizer(max_df=0.95, min_df=2, stop_words='english')
+    X = vectorizer.fit_transform(comments)
 
-    # # this list now has one comment per row of original data
-    # # now that we processed the data, we will carry out topic modeling
+    # converts the text data into a numerical format, ignoring words that occur in more than 95% of the comments and less than
+    # 2% of the comments, removes english stop words(like: and, the, but, etc.)
 
-    # vectorizer = CountVectorizer(max_df=0.95, min_df=2, stop_words='english')
-    # X = vectorizer.fit_transform(comments)
+    # Fit LDA model, topic modeling: uncover thematic structure in documents.
+    # We can fit the model for a number of components(number of topics it will look for)
 
-    # # converts the text data into a numerical format, ignoring words that occur in more than 95% of the comments and less than
-    # # 2% of the comments, removes english stop words(like: and, the, but, etc.)
+    # 5
+    lda5 = LatentDirichletAllocation(n_components=5, random_state=0)
+    lda5.fit(X)
 
-    # # Fit LDA model, topic modeling: uncover thematic structure in documents.
-    # # We can fit the model for a number of components(number of topics it will look for)
+    # print("X:" + str(X))
 
-    # # 5
-    # lda5 = LatentDirichletAllocation(n_components=5, random_state=0)
-    # lda5.fit(X)
+    top_words_per_topic_5 = get_lda_topics(vectorizer=vectorizer, lda=lda5)
+    print("Top words per 5 topics:")
+    for i in top_words_per_topic_5:
+        print(i)
+    print("we can correlate these with these topics:")
+    print("1. General Conference Logistics, Attendee Feedback, and Research Topics")
+    print("2. Hotel Amenities, Food Options, and Travel Logistics")
+    print("3. Virtual Conference Experience and Accessibility")
+    print("4. Community Interaction, Networking Opportunities, and Panel Discussions")
+    print("5. Research Presentations, Academic Support, and Global Impact")
 
-    # # print("X:" + str(X))
+    print("Since the fourth and fifth categories seem suspect, let's try with 4 components")
 
-    # top_words_per_topic_5 = get_lda_topics(vectorizer=vectorizer, lda=lda5)
-    # print("Top words per 5 topics:")
-    # for i in top_words_per_topic_5:
-    #     print(i)
-    # print("we can correlate these with these topics:")
-    # print("1. General Conference Logistics, Attendee Feedback, and Research Topics")
-    # print("2. Hotel Amenities, Food Options, and Travel Logistics")
-    # print("3. Virtual Conference Experience and Accessibility")
-    # print("4. Community Interaction, Networking Opportunities, and Panel Discussions")
-    # print("5. Research Presentations, Academic Support, and Global Impact")
+    lda4 = LatentDirichletAllocation(n_components=4, random_state=0)
+    lda4.fit(X)
 
-    # print("Since the fourth and fifth categories seem suspect, let's try with 4 components")
+    # print("X:" + str(X))
 
-    # lda4 = LatentDirichletAllocation(n_components=4, random_state=0)
-    # lda4.fit(X)
+    top_words_per_topic_4 = get_lda_topics(vectorizer=vectorizer, lda=lda4)
+    print("Top words per 4 topics:")
+    for i in top_words_per_topic_4:
+        print(i)
+    print("we can correlate these with these topics:")
+    print("1. Conference Venue, Accommodation, and Catering")
+    print("2. Meals, Location, and Research Networking")
+    print("3. Virtual Accessibility, Workshop Experience, and Online Tools")
+    print("4. Feedback on Virtual Tools, Support from the Society, and Global Research Impact")
+    print("Still, category 3 and 4 seems like they can be combined, let's try with 3 components")
 
-    # # print("X:" + str(X))
+    lda3 = LatentDirichletAllocation(n_components=3, random_state=0)
+    lda3.fit(X)
+    top_words_per_topic_3 = get_lda_topics(vectorizer=vectorizer, lda=lda3)
+    print("Top words per 3 topics:")
+    for i in top_words_per_topic_3:
+        print(i)
 
-    # top_words_per_topic_4 = get_lda_topics(vectorizer=vectorizer, lda=lda4)
-    # print("Top words per 4 topics:")
-    # for i in top_words_per_topic_4:
-    #     print(i)
-    # print("we can correlate these with these topics:")
-    # print("1. Conference Venue, Accommodation, and Catering")
-    # print("2. Meals, Location, and Research Networking")
-    # print("3. Virtual Accessibility, Workshop Experience, and Online Tools")
-    # print("4. Feedback on Virtual Tools, Support from the Society, and Global Research Impact")
-    # print("Still, category 3 and 4 seems like they can be combined, let's try with 3 components")
+    print("we can correlate these with these topics:")
+    print("1. Conference Venue, Catering, and Attendee Feedback")
+    print("2. Accommodation, Business Amenities, and Travel Logistics")
+    print("3. Virtual Conference Experience and Accessibility")
 
-    # lda3 = LatentDirichletAllocation(n_components=3, random_state=0)
-    # lda3.fit(X)
-    # top_words_per_topic_3 = get_lda_topics(vectorizer=vectorizer, lda=lda3)
-    # print("Top words per 3 topics:")
-    # for i in top_words_per_topic_3:
-    #     print(i)
+    # Let's now use Tf-idf in order to see the most popular keywords over each year's responses
+    # Term frequency-inverse document frequency measures the combined term frequency and inverse document frequency
+    # how important it is to that year specifically versus across the all time text responses
 
-    # print("we can correlate these with these topics:")
-    # print("1. Conference Venue, Catering, and Attendee Feedback")
-    # print("2. Accommodation, Business Amenities, and Travel Logistics")
-    # print("3. Virtual Conference Experience and Accessibility")
+    # Vectorize the text data using TF-IDF vectorizer
 
-    # # Let's now use Tf-idf in order to see the most popular keywords over each year's responses
-    # # Term frequency-inverse document frequency measures the combined term frequency and inverse document frequency
-    # # how important it is to that year specifically versus across the all time text responses
+    stop_words_list = list(stop_words)
 
-    # # Vectorize the text data using TF-IDF vectorizer
+    tfidf_vectorizer = TfidfVectorizer(
+        max_df=0.95, min_df=2, stop_words=stop_words_list)
+    tfidf_matrix = tfidf_vectorizer.fit_transform(comments)
 
-    # stop_words_list = list(stop_words)
+    # Get the updated feature names (words)
+    feature_names = tfidf_vectorizer.get_feature_names_out()
 
-    # tfidf_vectorizer = TfidfVectorizer(
-    #     max_df=0.95, min_df=2, stop_words=stop_words_list)
-    # tfidf_matrix = tfidf_vectorizer.fit_transform(comments)
+    # Get the top 7 keywords for each response
+    top_keywords_per_response = []
+    for i in range(tfidf_matrix.shape[0]):
+        tfidf_scores = tfidf_matrix[i].toarray()[0]
+        top_keywords = [feature_names[j]
+                        for j in tfidf_scores.argsort()[:-7 - 1:-1]]
 
-    # # Get the updated feature names (words)
-    # feature_names = tfidf_vectorizer.get_feature_names_out()
+        top_keywords_per_response.append(top_keywords)
 
-    # # Get the top 7 keywords for each response
-    # top_keywords_per_response = []
-    # for i in range(tfidf_matrix.shape[0]):
-    #     tfidf_scores = tfidf_matrix[i].toarray()[0]
-    #     top_keywords = [feature_names[j]
-    #                     for j in tfidf_scores.argsort()[:-7 - 1:-1]]
+    year_labels = [2022, 2021, 2020, 2019, 2018, 2016, 2015, 2014, 2013]
 
-    #     top_keywords_per_response.append(top_keywords)
+    # Display the year label and top 7 keywords for each response
+    for i in range(len(year_labels)):
+        print(f"{year_labels[i]}: {top_keywords_per_response[i]}")
 
-    # year_labels = [2022, 2021, 2020, 2019, 2018, 2016, 2015, 2014, 2013]
+    # Let's now use Named Entity Recognition(NER) to extract entities thathave predefined
+    # categories like names of people or locations and expressions of time, monetary values, etc.
+    # we will use the spaCy model, a open source library trained for this type of NLP
 
-    # # Display the year label and top 7 keywords for each response
-    # for i in range(len(year_labels)):
-    #     print(f"{year_labels[i]}: {top_keywords_per_response[i]}")
+    # Load the spaCy model
+    nlp = spacy.load('en_core_web_sm')
 
-    # # Let's now use Named Entity Recognition(NER) to extract entities thathave predefined
-    # # categories like names of people or locations and expressions of time, monetary values, etc.
-    # # we will use the spaCy model, a open source library trained for this type of NLP
+    # Process the text data
+    docs = [nlp(comment) for comment in comments]
 
-    # # Load the spaCy model
-    # nlp = spacy.load('en_core_web_sm')
+    # Extract named entities, phrases and concepts
+    entities = [ent.text for doc in docs for ent in doc.ents]
 
-    # # Process the text data
-    # docs = [nlp(comment) for comment in comments]
+    # Get the most common entities
+    common_entities = Counter(entities).most_common(10)
 
-    # # Extract named entities, phrases and concepts
-    # entities = [ent.text for doc in docs for ent in doc.ents]
+    # top ten named entities, phrases and concepts
+    print(common_entities)
 
-    # # Get the most common entities
-    # common_entities = Counter(entities).most_common(10)
+    entities = [ent.text for doc in docs for ent in doc.ents if ent.text.lower() not in
+                ['one', 'two', 'three', 'next year', 'the day', 'this year', 'first', 'second', 'last year']]
 
-    # # top ten named entities, phrases and concepts
-    # print(common_entities)
+    # Get the most common entities
+    common_entities = Counter(entities).most_common(10)
 
-    # entities = [ent.text for doc in docs for ent in doc.ents if ent.text.lower() not in
-    #             ['one', 'two', 'three', 'next year', 'the day', 'this year', 'first', 'second', 'last year']]
-
-    # # Get the most common entities
-    # common_entities = Counter(entities).most_common(10)
-
-    # print(common_entities)
+    print(common_entities)
 
     # screen out for uninformatived entities
 
     # Second part: trend analysis
 
-    # file_path = 'numerical_questions.csv'
-    # numerical_data = pd.read_csv(file_path)
-
-    # file_path = 'categorical_questions.csv'
-    # categorical_data = pd.read_csv(file_path)
-
-    # print(categorical_data.shape)
-
-    # dict_columns = categorical_data.columns[categorical_data.apply(
-    #     lambda x: x.astype(str).str.startswith('{').all())]
-
-    # # Convert the dictionary-like strings in these columns into actual dictionaries
-    # categorical_data[dict_columns] = categorical_data[dict_columns].applymap(
-    #     lambda x: ast.literal_eval(x) if pd.notna(x) else x)
-
-    # # # Transform the dictionaries in these columns into separate columns for each response option
-    # categorical_questions_transformed_df = pd.DataFrame()
-
-    # for col in dict_columns:
-    #     col_df = categorical_data[col].apply(pd.Series)
-    #     col_df = col_df.add_prefix(col + '_')
-    #     categorical_questions_transformed_df = pd.concat(
-    #         [categorical_questions_transformed_df, col_df], axis=1)
-
-    # years = [2022, 2021, 2020, 2019, 2018, 2016, 2015, 2014, 2013]
-    # categorical_questions_transformed_df['Year'] = years
-
-    # print(categorical_questions_transformed_df)
+    # Numerical trend analysis
 
     file_path = 'numerical_questions.csv'
     numerical_data = pd.read_csv(file_path)
@@ -315,6 +315,27 @@ def main():
     years = numerical_data['Year']
 
     # Plot a graph across years of quantity of survey responses by the first question,
+    numerical_data['When it comes to the content of the conference program, my evaluation is:_counts'] = numerical_data[
+        'When it comes to the content of the conference program, my evaluation is:'].apply(lambda x: ast.literal_eval(str(x)) if pd.notna(x) else {})
+
+    # Replace each dictionary with the sum of its values
+    numerical_data['Response_Counts'] = numerical_data[
+        'When it comes to the content of the conference program, my evaluation is:_counts'].apply(lambda x: sum(x.values()) if x else 0)
+
+    # Group by 'Year' and sum the total responses
+    response_counts = numerical_data.groupby('Year')['Response_Counts'].sum()
+
+    response_year = response_counts.index
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(response_year, response_counts, marker='o', color='b')
+    plt.xlabel('Year')
+    plt.ylabel('Number of Responses')
+    plt.title('Quantity of Survey Responses by Year')
+    plt.xticks(years)
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
 
     # Looking at overall conference value and quality of presented work
 
@@ -366,153 +387,74 @@ def main():
     plt.show()
 
     # Looking at Services provided, Socialization, Location
-
-    columns_to_process = ["When it comes to the services provided by the conference organization, including technical support, my evaluation is:",
-                          "When it comes to the opportunity to socialize at the conference, my evaluation is:",
-                          "When it comes to conference geographical location my evaluation is:"]
-
-    for column in columns_to_process:
-        numerical_data[column] = numerical_data[column].apply(
-            convert_string_to_dict)
-        numerical_data[column +
-                       '_Avg'] = numerical_data[column].apply(calculate_weighted_average)
-
-    numerical_data['Service_Value_Avg'] = numerical_data['When it comes to the services provided by the conference organization, including technical support, my evaluation is:_Avg']
-    numerical_data['Socialization_Avg'] = numerical_data[
-        'When it comes to the opportunity to socialize at the conference, my evaluation is:_Avg']
-    numerical_data['Location_Avg'] = numerical_data["When it comes to conference geographical location my evaluation is:_Avg"]
-
-    # Calculate average of calculated weighted averages
-    service_value_avg = numerical_data['Service_Value_Avg'].mean()
-    socialization_value_avg = numerical_data['Socialization_Avg'].mean()
-    location_avg = numerical_data['Location_Avg'].mean()
-
-    print(years)
-
-    # Create a line plot
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, numerical_data['Service_Value_Avg'],
-             marker='o', label='Quality of Services Provided')
-    plt.plot(years, numerical_data['Socialization_Avg'],
-             marker='o', label='Quality of Socialization Opportunities')
-    plt.plot(years, numerical_data['Location_Avg'],
-             marker='o', label='Rating of Location')
-    plt.axhline(y=service_value_avg, color='r', linestyle='--',
-                label='Average Qualities of Services provided')
-    plt.axhline(y=socialization_value_avg, color='g',
-                linestyle='--', label='Average Quality of Socialization Opportunities')
-    plt.axhline(y=location_avg, color='b', linestyle='--',
-                label='Average Rating of Location')
-    plt.xlabel('Year')
-    plt.ylabel('Rating')
-    plt.title('Average Rating Trends of Meta Statistics Over the Years')
-    plt.legend()
-    plt.xticks(years)
-    plt.grid(True)
-    plt.tight_layout()
-
-    # Display the plot
-    plt.show()
-
     # Look at Venue, Fee, Overnight accomadations
-
-    columns_to_process = ["When it comes to the conference venue (building and facilities) my evaluation is:",
-                          "When it comes to the conference fee my evaluation is:",
-                          "When it comes to the overnight accommodation my evaluation is:"]
-
-    for column in columns_to_process:
-        numerical_data[column] = numerical_data[column].apply(
-            convert_string_to_dict)
-        numerical_data[column +
-                       '_Avg'] = numerical_data[column].apply(calculate_weighted_average)
-
-    numerical_data['Venue_Avg'] = numerical_data[
-        'When it comes to the conference venue (building and facilities) my evaluation is:_Avg']
-    numerical_data['Fee_Avg'] = numerical_data[
-        'When it comes to the conference fee my evaluation is:_Avg']
-    numerical_data['Overnight_Avg'] = numerical_data["When it comes to the overnight accommodation my evaluation is:_Avg"]
-
-    # Calculate average of calculated weighted averages
-    venue_avg = numerical_data['Venue_Avg'].mean()
-    fee_avg = numerical_data['Fee_Avg'].mean()
-    overnight_avg = numerical_data['Overnight_Avg'].mean()
-
-    print(years)
-
-    # Create a line plot
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, numerical_data['Venue_Avg'],
-             marker='o', label='Quality of Venue')
-    plt.plot(years, numerical_data['Fee_Avg'],
-             marker='o', label='Rating of Conference Fee')
-    plt.plot(years, numerical_data['Overnight_Avg'],
-             marker='o', label='Rating of Overnight accomodations')
-    plt.axhline(y=venue_avg, color='r', linestyle='--',
-                label='Average Qualities of Venue')
-    plt.axhline(y=fee_avg, color='g',
-                linestyle='--', label='Average Rating of Conference Fee')
-    plt.axhline(y=overnight_avg, color='b', linestyle='--',
-                label='Average Rating of Overnight Accomodations')
-    plt.xlabel('Year')
-    plt.ylabel('Rating')
-    plt.title('Average Rating Trends of Meta Statistics (2) Over the Years')
-    plt.legend()
-    plt.xticks(years)
-    plt.grid(True)
-    plt.tight_layout()
-
-    # Display the plot
-    plt.show()
-
     # Looking at Types of sessions, plenary, parallel, WIP,
-    columns_to_process = ["How do you evaluate the following sessions and workshops? [Plenary sessions]",
-                          "How do you evaluate the following sessions and workshops? [Parallel sessions]",
-                          "How do you evaluate the following sessions and workshops? [Work-in-progress (WIP) sessions]"]
 
-    for column in columns_to_process:
-        numerical_data[column] = numerical_data[column].apply(
-            convert_string_to_dict)
-        numerical_data[column +
-                       '_Avg'] = numerical_data[column].apply(calculate_weighted_average)
+    columns_and_info = [
+        {
+            'columns': ["When it comes to the services provided by the conference organization, including technical support, my evaluation is:",
+                        "When it comes to the opportunity to socialize at the conference, my evaluation is:",
+                        "When it comes to conference geographical location my evaluation is:"],
+            'labels': ['Quality of Services Provided', 'Quality of Socialization Opportunities', 'Rating of Location'],
+            'colors': ['r', 'g', 'b'],
+            'title': 'Average Rating Trends of Meta Statistics Over the Years'
+        },
+        {
+            'columns': ["When it comes to the conference venue (building and facilities) my evaluation is:",
+                        "When it comes to the conference fee my evaluation is:",
+                        "When it comes to the overnight accommodation my evaluation is:"],
+            'labels': ['Quality of Venue', 'Rating of Conference Fee', 'Rating of Overnight Accommodations'],
+            'colors': ['r', 'g', 'b'],
+            'title': 'Average Rating Trends of Meta Statistics (2) Over the Years'
+        },
+        {
+            'columns': ["How do you evaluate the following sessions and workshops? [Plenary sessions]",
+                        "How do you evaluate the following sessions and workshops? [Parallel sessions]",
+                        "How do you evaluate the following sessions and workshops? [Work-in-progress (WIP) sessions]"],
+            'labels': ['Quality of Plenary Sessions', 'Rating of Parallel Sessions', 'Rating of WIP(Work-in-progress) Sessions'],
+            'colors': ['r', 'g', 'b'],
+            'title': 'Average Rating Trends of Types of Sessions Over the Years'
+        }
+    ]
 
-    numerical_data['Plenary_Avg'] = numerical_data[
-        'How do you evaluate the following sessions and workshops? [Plenary sessions]_Avg']
-    numerical_data['Parallel_Avg'] = numerical_data[
-        'How do you evaluate the following sessions and workshops? [Parallel sessions]_Avg']
-    numerical_data['WIP_Avg'] = numerical_data[
-        "How do you evaluate the following sessions and workshops? [Work-in-progress (WIP) sessions]_Avg"]
+    for group in columns_and_info:
+        columns_to_process = group['columns']
+        labels = group['labels']
+        colors = group['colors']
+        title = group['title']
 
-    # Calculate average of calculated weighted averages
-    plenary_avg = numerical_data['Plenary_Avg'].mean()
-    parallel_avg = numerical_data['Parallel_Avg'].mean()
-    WIP_avg = numerical_data['WIP_Avg'].mean()
+        # Process each column and plot the data
+        plt.figure(figsize=(10, 6))
 
-    # Create a line plot
-    plt.figure(figsize=(10, 6))
-    plt.plot(years, numerical_data['Plenary_Avg'],
-             marker='o', label='Quality of Plenary Sessions')
-    plt.plot(years, numerical_data['Parallel_Avg'],
-             marker='o', label='Rating of Parallel Sessions')
-    plt.plot(years, numerical_data['WIP_Avg'],
-             marker='o', label='Rating of WIP(Work-in-progress) Sessions')
-    plt.axhline(y=plenary_avg, color='r', linestyle='--',
-                label='Average Rating of Plenary Sessions')
-    plt.axhline(y=parallel_avg, color='g',
-                linestyle='--', label='Average Rating of Parallel Sessions')
-    plt.axhline(y=WIP_avg, color='b', linestyle='--',
-                label='Average Rating of WIP(Work-in-progess) Sessions')
-    plt.xlabel('Year')
-    plt.ylabel('Rating')
-    plt.title('Average Rating Trends of Types of Sessions Over the Years')
-    plt.legend()
-    plt.xticks(years)
-    plt.grid(True)
-    plt.tight_layout()
+        for i, column in enumerate(columns_to_process):
+            label = labels[i]
+            color = colors[i]
 
-    # Display the plot
-    plt.show()
+            # Convert and calculate weighted averages
+            numerical_data[column] = numerical_data[column].apply(
+                convert_string_to_dict)
+            numerical_data[column + '_Avg'] = numerical_data[column].apply(
+                calculate_weighted_average)
 
-    #
+            # Calculate the overall average
+            overall_avg = numerical_data[column + '_Avg'].mean()
+
+            # Plot the data and average line
+            plt.plot(years, numerical_data[column + '_Avg'],
+                     marker='o', label=label, color=color)
+            plt.axhline(y=overall_avg, linestyle='--',
+                        label=f'Average {label}', color=color)
+
+        plt.xlabel('Year')
+        plt.ylabel('Rating')
+        plt.title(title)
+        plt.legend()
+        plt.xticks(years)
+        plt.grid(True)
+        plt.tight_layout()
+
+        # Display the plot
+        plt.show()
     # Looking at feedback, SOC, Virtual poster, in person poster,
     #
 
@@ -685,7 +627,7 @@ def main():
                     label=f'Average {label}', color=color)
 
     plt.xlabel('Year')
-    plt.ylabel('Shorter/Fewer(1) to Longer/More(2)')
+    plt.ylabel('Shorter/Fewer(1) to Longer/More(7)')
     plt.title(
         'Average Rating Parallel and Plenary Session Durations and Value Over the Years')
     plt.legend()
@@ -702,12 +644,12 @@ def main():
     columns_and_info = [
         {
             'column': "What is your opinion about the duration of the breaks during the conference?",
-            'label': 'Duration of Breaks',
+            'label': 'Duration of Breaks(7 = breaks are too long)',
             'color': 'r'
         },
         {
             'column': "Would you like to see more or less academic work (as compared to applications)?",
-            'label': 'Preference for Academic Work vs Applications',
+            'label': 'Preference for Academic Work vs Applications(7 = more academic work)',
             'color': 'g'
         },
         {
@@ -751,6 +693,61 @@ def main():
 
     # Display the plot
     plt.show()
+
+    categorical_data = pd.read_csv('categorical_questions.csv', index_col=0)
+
+    interested_columns = ["How many years of experience do you have with system dynamics?",
+                          "Have you attended the SD conference before?",
+                          "What is your profession? Please select all that apply.",
+                          "What are your fields of interest? Please select all that apply.",
+                          "What is your geographic region?"]
+
+    for column in interested_columns:
+        categorical_data[column] = categorical_data[column].apply(safe_eval)
+        categorical_data[column +
+                         '_Percentage'] = categorical_data[column].apply(calculate_percentage)
+
+        plt.figure(figsize=(10, 6))
+        for response_option in categorical_data[column + '_Percentage'].iloc[0].keys():
+            percentages = [x[response_option]
+                           for x in categorical_data[column + '_Percentage'] if x[response_option] != 0]
+            plt.plot(categorical_data.index[categorical_data[column +
+                                                             '_Percentage'].apply(lambda x: x[response_option] != 0)],
+                     percentages,
+                     marker='o', label=response_option)
+
+        plt.xlabel('Year')
+        plt.ylabel('Percentage (%)')
+        plt.title(f'Percentage of Responses for "{column}" Over the Years')
+        plt.xticks(rotation=45)
+        plt.grid(True)
+        plt.tight_layout()
+        plt.legend()
+        plt.show()
+
+    # boolean trend analysis
+
+    boolean_data = pd.read_csv('boolean_questions.csv', index_col=0)
+
+    plt.figure(figsize=(10, 6))
+    for i, column in enumerate(boolean_data.columns):
+        boolean_data[column] = boolean_data[column].apply(safe_eval)
+        boolean_data[column +
+                     '_Percentage'] = boolean_data[column].apply(calculate_yes_percentage)
+        # Filter out -1 values
+        valid_indices = boolean_data[column + '_Percentage'] != -1
+        plt.plot(boolean_data.index[valid_indices],
+                 boolean_data[column + '_Percentage'][valid_indices], marker='o', label=column)
+
+    plt.xlabel('Year')
+    plt.ylabel('Percentage of Yes Responses (%)')
+    plt.title('Percentage of Yes Responses Over the Years')
+    plt.xticks(rotation=45)
+    plt.grid(True)
+    plt.tight_layout()
+    plt.legend()
+    plt.show()
+
 
     # Third part: time series cutoff, in person vs hybrid
 main()
