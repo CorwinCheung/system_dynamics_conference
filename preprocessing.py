@@ -2263,10 +2263,221 @@ def year_2022():
     text_responses_2022.to_csv("text_responses.csv")
 
 
+def year_2023():
+    file_path = "data/2023 ISDC Report.xlsx"
+    df_2023 = pd.read_excel(file_path)
+    df_2023 = df_2023.drop("Timestamp", axis=1)
+    pd.set_option('display.max_columns', None)
+    print(df_2023.head())
+    # subset_indices = [0, 1, 25, 26, 27, 28, 29, 35, 36,
+    #                   37, 38, 39, 40]  # Assuming zero-based indexing
+    # categorical_df_2023 = df_2023.iloc[:, subset_indices]
+    categorical_df_2023 = df_2023
+    # print(categorical_df_2023.columns)
+
+    print(
+        categorical_df_2023["What is your geographic region?"].value_counts())
+
+    categorical_df_2023["How did you attend ISDC 2023?"] = categorical_df_2023["How did you attend ISDC 2023?"].str.replace(
+        'person', 'presence')
+    value_counts_dict_1 = categorical_df_2023["How did you attend ISDC 2023?"].value_counts(
+    ).to_dict()
+
+    options_for_website_use = [
+        'Attend zoom sessions (parallels, WIPs, roundtables, etc)',
+        'Attend workshops',
+        'Access session chat',
+        'View posters or attend poster session',
+        'Access session recordings'
+    ]
+
+    value_counts_dict_2 = explode_for_multiselect(
+        categorical_df_2023, "What did you use the conference WEBSITE ( isdc.systemdynamics.org) for? Please select all that apply.", options_for_website_use)
+
+    value_counts_dict_3 = categorical_df_2023["How many years of experience do you have with system dynamics?"].value_counts(
+    ).to_dict()
+
+    value_counts_dict_4 = categorical_df_2023["Have you attended the SD conference before?"].value_counts(
+    ).to_dict()
+
+    value_counts_dict_5 = categorical_df_2023["If you attended a conference before, which formats did you experience?"].value_counts(
+    ).to_dict()
+
+    value_counts_dict_6 = categorical_df_2023["How do you evaluate this year’s hybrid format as compared to the purely in-person and virtual formats?"].value_counts(
+    ).to_dict()
+
+    options_for_future_conferences = [
+        'access to recorded sessions',
+        'networking in Zoom',
+        'availability of pre-recorded talks'
+    ]
+    value_counts_dict_7 = explode_for_multiselect(
+        categorical_df_2023, "Which of the following aspects, if any,  would be worthwhile to continue for future conferences?  Please select all that apply.", options_for_future_conferences)
+
+    options_for_profession = [
+        'Consulting',
+        'Higher education',
+        'In-house SD practitioner (private sector)',
+        'In-house SD practitioner (public sector)',
+        'K-12 education',
+        'Research using SD',
+        'SD client/customer',
+        'Student',
+        'Retired',
+    ]
+
+    value_counts_dict_8 = explode_for_multiselect(
+        categorical_df_2023, "What is your profession? Please select all that apply.", options_for_profession)
+
+    options_for_interest = [
+        'Business policy',
+        'Teaching',
+        'Strategy',
+        'Health',
+        'Economic dynamics',
+        'Energy and resources',
+        'Environment and ecology',
+        'Information science',
+        'Methodology',
+        'Operations management and supply chains',
+        'Participatory problem solving',
+        'Public policy',
+        'Security',
+        'Social and organizational dynamics',
+    ]
+
+    value_counts_dict_9 = explode_for_multiselect(
+        categorical_df_2023, "What are your fields of interest? Please select all that apply.", options_for_interest)
+
+    value_counts_dict_10 = categorical_df_2023["What is your geographic region?"].value_counts(
+    ).to_dict()
+
+    value_counts_dict_11 = categorical_df_2023["How do you self-identify in terms of gender?"].value_counts(
+    ).to_dict()
+
+    value_counts_dict_12 = categorical_df_2023["How old are you?"].value_counts(
+    ).to_dict()
+
+    options_for_values = [
+        'Location',
+        'Topic: System Dynamics',
+        'Live presentations',
+        'Recordings',
+        'Social Interaction',
+        'Q & A',
+    ]
+
+    value_counts_dict_13 = explode_for_multiselect(
+        categorical_df_2023, "Which aspects do you value most when choosing to attend a conference? Select up to 3.", options_for_values)
+
+    # create new DataFrame
+    count_categorical_df_2023 = pd.DataFrame(index=["2023"])
+
+    # store the dictionaries as single values in the DataFrame
+    value_counts_dicts = {
+        "How did you attend ISDC 2023?": value_counts_dict_1,
+        "What did you use the conference WEBSITE for? Please select all that apply.": value_counts_dict_2,
+        "How many years of experience do you have with system dynamics?": value_counts_dict_3,
+        "Have you attended the SD conference before?": value_counts_dict_4,
+        "If you attended a conference before, which formats did you experience?": value_counts_dict_5,
+        "How do you evaluate this year’s hybrid format as compared to the purely in presence and virtual formats?": value_counts_dict_6,
+        "Which of the following features, if any, would be worthwhile to continue for future conferences? Please select all that apply.": value_counts_dict_7,
+        "What is your profession? Please select all that apply.": value_counts_dict_8,
+        "What are your fields of interest? Please select all that apply.": value_counts_dict_9,
+        "What is your geographic region?": value_counts_dict_10,
+        "How do you self-identify in terms of gender?": value_counts_dict_11,
+        "How old are you?": value_counts_dict_12,
+        "Which aspects do you value most when choosing to attend a conference? Select up to 3.": value_counts_dict_13
+    }
+
+    for column_name, value_counts_dict in value_counts_dicts.items():
+        count_categorical_df_2023.loc["2023",
+                                      column_name] = [value_counts_dict]
+    print(count_categorical_df_2023.shape)
+
+    print(count_categorical_df_2023)
+
+    count_categorical_df_2023.to_csv(
+        "categorical_questions.csv", mode='a', header=False)
+
+    boolean_df_2023 = df_2023
+
+    print(boolean_df_2023.head())
+
+    column_names = ["Have you contacted any presenters for more information?",
+                    "Did you visit any exhibitors during the conference?"]
+
+    count_boolean_df_2023 = pd.DataFrame(index=["2023"])
+
+    for column_name in column_names:
+        bool_counts = boolean_df_2023[column_name].value_counts().to_dict()
+        count_boolean_df_2023.loc["2023", column_name] = [bool_counts]
+
+    print(count_boolean_df_2023.shape)
+    print(count_boolean_df_2023)
+
+    count_boolean_df_2023.to_csv(
+        "boolean_questions.csv", mode='a', header=False)
+
+    numerical_df_2023 = df_2023
+
+    print(numerical_df_2023.columns)
+    count_numerical_df_2023 = pd.DataFrame(index=["2023"])
+
+    column_names = ["When it comes to the content of the conference program, my evaluation is:",
+                    'When it comes to the conference website and access to presented work, my evaluation is:',
+                    'When it comes to the services provided by the conference organization, including technical support, my evaluation is:',
+                    'When it comes to the opportunity to socialize at the conference, my evaluation is:',
+                    'When it comes to overall conference value, my evaluation is:',
+                    'How do you evaluate the following sessions and workshops? [Plenary sessions]',
+                    'How do you evaluate the following sessions and workshops? [Parallel sessions]',
+                    'How do you evaluate the following sessions and workshops? [Work-in-progress (WIP) sessions]',
+                    'How do you evaluate the following sessions and workshops? [Feedback sessions]',
+                    'How do you evaluate the following sessions and workshops? [Student-Organized Colloquium]',
+                    'How do you evaluate the following sessions and workshops? [Virtual poster sessions]',
+                    'How do you evaluate the following sessions and workshops? [In-presence poster session]',
+                    'How do you evaluate the following sessions and workshops? [Roundtables]',
+                    'How do you evaluate the following sessions and workshops? [Online workshops]',
+                    'How do you evaluate the following sessions and workshops? [Hybrid workshops]',
+                    'How do you rate the overall quality of the presented work?']
+
+    for column_name in column_names:
+        bool_counts = numerical_df_2023[column_name].value_counts(
+        ).to_dict()
+        count_numerical_df_2023.loc["2023", column_name] = [bool_counts]
+
+    print(count_numerical_df_2023.shape)
+    print(count_numerical_df_2023)
+
+    count_numerical_df_2023.to_csv(
+        "numerical_questions.csv", mode='a', header=False)
+
+    text_indices = [3, 5, 7, 9, 11, 35, 37, 43, 44, 45, 54]
+    text_df_2023 = df_2023.iloc[:, text_indices]
+
+    print(text_df_2023.columns)
+    # print(text_df_2023["Additional comments"])
+
+    text_responses_2023 = pd.DataFrame(
+        index=["2023"], columns=text_df_2023.columns)
+
+    for column_name in text_df_2023.columns:
+        # Drop NaN values and convert column to a list
+        responses = text_df_2023[column_name].dropna().tolist()
+        responses = np.array(responses)
+        text_responses_2023.at["2023", column_name] = responses
+
+    print(text_responses_2023.shape)
+    print(text_responses_2023)
+
+    text_responses_2023.to_csv("text_responses.csv", mode='a', header=False)
+
+
 def main():
 
-    # RUN ALL 9 of them to generate the csv of the processed data!
+    # RUN ALL 10 of them to generate the csv of the processed data!
 
+    # year_2023()
     # year_2022()
     # year_2021()
     # year_2020()
