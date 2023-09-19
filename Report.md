@@ -278,6 +278,74 @@ First few responses:
 | getting tired absorb                | 0.003831   |
 | portion lunches small               | 0.003831   |
 
+## By Year for the last three years:
+
+# 2023:
+
+| Good Term              | Importance |
+| ---------------------- | ---------- |
+| meeting new people     | 0.017112   |
+| new people learning    | 0.008770   |
+| new work networking    | 0.006263   |
+| good new work          | 0.006263   |
+| colleagues meeting new | 0.006125   |
+
+| Bad Term                     | Importance |
+| ---------------------------- | ---------- |
+| expensive covered university | 0.027027   |
+| year conference expensive    | 0.027027   |
+| lack meals frustrating       | 0.027027   |
+| connect community way        | 0.027027   |
+| virtual format easy          | 0.019111   |
+
+Positive Responses: 181
+Negative Responses: 37
+Neutral Responses: 204
+
+# 2022:
+
+| Good Term                       | Importance |
+| ------------------------------- | ---------- |
+| did great job                   | 0.003888   |
+| excellent plenary talks         | 0.003606   |
+| possibility slides participants | 0.003521   |
+| feedback sessions included      | 0.003521   |
+| did feedback presentation       | 0.003521   |
+
+| Bad Term                            | Importance |
+| ----------------------------------- | ---------- |
+| participation socializing difficult | 0.019794   |
+| virtual participation socializing   | 0.019794   |
+| qualifies bad bad                   | 0.018182   |
+| catering terrible opinion           | 0.018182   |
+| website bit slow                    | 0.018182   |
+
+Positive Responses: 284
+Negative Responses: 55
+Neutral Responses: 207
+
+# 2021:
+
+| Good Term                      | Importance |
+| ------------------------------ | ---------- |
+| wasnt kind event               | 0.006494   |
+| schedule somewhat overwhelming | 0.006494   |
+| technical support friendly     | 0.006494   |
+| im new contribute              | 0.006494   |
+| think trend positive           | 0.006494   |
+
+| Bad Term                     | Importance |
+| ---------------------------- | ---------- |
+| did previous comments        | 0.050000   |
+| zone things difficult        | 0.035355   |
+| time zone things             | 0.035355   |
+| difficult navigate times     | 0.035355   |
+| socialize virtual conference | 0.035355   |
+
+Positive Responses: 154
+Negative Responses: 20
+Neutral Responses: 105
+
 ## LDA Topic modeling with 3 components over all responses:
 
 ## Correlated Topics

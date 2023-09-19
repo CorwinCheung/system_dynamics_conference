@@ -198,23 +198,101 @@ def main():
     print(positive_trigrams)
     print(negative_trigrams)
 
+    data_2023 = data.loc[data.index[0]]
+
+    print("Text Data for 2023:")
+    print(data_2023)
+
+    # Apply the basic preprocessing to the 2023 row
+    basic_preprocessed_data_2023 = data_2023.apply(
+        lambda x: basic_preprocess_text(str(x)) if pd.notna(x) else '')
+
+    # Convert string representation of lists to actual lists
+    basic_preprocessed_data_2023 = basic_preprocessed_data_2023.apply(
+        lambda x: ast.literal_eval(str(x)) if '[' in str(x) else [str(x)])
+
+    positive_responses, negative_responses, neutral_responses = analyze_sentiments(
+        basic_preprocessed_data_2023)
+
+    print(len(positive_responses), len(
+        negative_responses), len(neutral_responses))
+
+    positive_trigrams = extract_keywords(positive_responses, ngram=3)
+    negative_trigrams = extract_keywords(negative_responses, ngram=3)
+
+    print("\nThree words: ")
+    print(positive_trigrams)
+    print(negative_trigrams)
+
+    data_2022 = data.loc[data.index[1]]
+
+    print("Text Data for 2022:")
+    print(data_2022)
+
+    # Apply the basic preprocessing to the 2023 row
+    basic_preprocessed_data_2022 = data_2022.apply(
+        lambda x: basic_preprocess_text(str(x)) if pd.notna(x) else '')
+
+    # Convert string representation of lists to actual lists
+    basic_preprocessed_data_2022 = basic_preprocessed_data_2022.apply(
+        lambda x: ast.literal_eval(str(x)) if '[' in str(x) else [str(x)])
+
+    positive_responses, negative_responses, neutral_responses = analyze_sentiments(
+        basic_preprocessed_data_2022)
+
+    print(len(positive_responses), len(
+        negative_responses), len(neutral_responses))
+
+    positive_trigrams = extract_keywords(positive_responses, ngram=3)
+    negative_trigrams = extract_keywords(negative_responses, ngram=3)
+
+    print("\nThree words: ")
+    print(positive_trigrams)
+    print(negative_trigrams)
+
+    data_2021 = data.loc[data.index[2]]
+
+    print("Text Data for 2021:")
+    print(data_2021)
+
+    # Apply the basic preprocessing to the 2023 row
+    basic_preprocessed_data_2021 = data_2021.apply(
+        lambda x: basic_preprocess_text(str(x)) if pd.notna(x) else '')
+
+    # Convert string representation of lists to actual lists
+    basic_preprocessed_data_2021 = basic_preprocessed_data_2021.apply(
+        lambda x: ast.literal_eval(str(x)) if '[' in str(x) else [str(x)])
+
+    positive_responses, negative_responses, neutral_responses = analyze_sentiments(
+        basic_preprocessed_data_2021)
+
+    print(len(positive_responses), len(
+        negative_responses), len(neutral_responses))
+
+    positive_trigrams = extract_keywords(positive_responses, ngram=3)
+    negative_trigrams = extract_keywords(negative_responses, ngram=3)
+
+    print("\nThree words: ")
+    print(positive_trigrams)
+    print(negative_trigrams)
+
     # Let's look for phrases instead of just individual terms
 
     # Extract the most representative answers from the positive and negative responses
     # Get two responses for the three most important categories
 
-    positive_most_representative_responses = get_top_n_representative_responses_for_each_topic(
-        positive_responses, 2)
-    negative_most_representative_responses = get_top_n_representative_responses_for_each_topic(
-        negative_responses, 2)
+    # positive_most_representative_responses = get_top_n_representative_responses_for_each_topic(
+    #     positive_responses, 2)
+    # negative_most_representative_responses = get_top_n_representative_responses_for_each_topic(
+    #     negative_responses, 2)
 
-    print("\n\n\n Most representative repsonses: \n \n ")
+    # print("\n\n\n Most representative repsonses: \n \n ")
 
-    print("Positive most representative responses")
-    print(positive_most_representative_responses)
+    # print("Positive most representative responses")
+    # print(positive_most_representative_responses)
 
-    print("Negative most representative responses")
-    print(negative_most_representative_responses)
+    # print("Negative most representative responses")
+    # print(negative_most_representative_responses)
 
 
 main()
