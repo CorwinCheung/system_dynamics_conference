@@ -325,6 +325,7 @@ First few responses:
 
 | Year | Keywords                                                                      |
 | ---- | ----------------------------------------------------------------------------- |
+| 2023 | 'people', 'conference', 'sessions', 'work', 'virtual', 'online', 'meeting'    |
 | 2022 | 'virtual', 'hybrid', 'person', 'technical', 'feedback', 'website', 'access'   |
 | 2021 | 'zoom', 'virtual', 'feedback', 'technical', 'workshops', 'schedule', 'dialog' |
 | 2020 | 'virtual', 'echo', 'zoom', 'recorded', 'able', 'chat', 'format'               |

@@ -292,7 +292,7 @@ def main():
 
         top_keywords_per_response.append(top_keywords)
 
-    year_labels = [2022, 2021, 2020, 2019, 2018, 2016, 2015, 2014, 2013]
+    year_labels = [2023, 2022, 2021, 2020, 2019, 2018, 2016, 2015, 2014, 2013]
 
     # Display the year label and top 7 keywords for each response
     for i in range(len(year_labels)):
